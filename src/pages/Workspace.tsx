@@ -12,10 +12,13 @@ import {
   createInitialProgress,
   unlockHint,
   updateDeepDiveStatus,
+  updateUnitCode,
   resetUnitProgress,
   registerAttempt,
 } from "../core/progress/manager";
 import type { UserProgress, ActivityResult } from "../core/domain/types";
+import type { ProgressRepository } from "../core/domain/contracts";
+import { LocalStorageProgressRepository } from "../core/persistence/LocalStorageProgressRepository";
 import { CodeActivityEngine } from "../activities/code/engine/CodeActivityEngine";
 import type { EngineStatus } from "../activities/code/worker/protocol";
 import { verifyActivityResult } from "../activities/code/verifier/OutputVerifier";
@@ -23,7 +26,12 @@ import { verifyActivityResult } from "../activities/code/verifier/OutputVerifier
 // Conteúdo JSON pedagógico real
 import unitData from "../content/courses/python-iniciante/units/1.1-print.json";
 
-export const Workspace: React.FC = () => {
+interface WorkspaceProps {
+  // Injeção opcional para testes; em produção usa LocalStorageProgressRepository.
+  repository?: ProgressRepository;
+}
+
+export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
   const unit = loadUnit(unitData);
   const [progress, setProgress] = useState<UserProgress>(() =>
     createInitialProgress(unit.id, unit.activity.config.starterCode)
@@ -35,7 +43,18 @@ export const Workspace: React.FC = () => {
   const [showDeepDive, setShowDeepDive] = useState(false);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>("loading");
   const [isRunning, setIsRunning] = useState(false);
+  const [isProgressLoaded, setIsProgressLoaded] = useState(false);
   const engineRef = useRef<CodeActivityEngine | null>(null);
+
+  // Repositório de persistência: injetável para testes, senão o repositório real
+  // (armazenamento local do navegador). Toda leitura/escrita de progresso passa
+  // exclusivamente por ele — este componente nunca acessa o armazenamento direto.
+  const repositoryRef = useRef<ProgressRepository | null>(null);
+  if (repositoryRef.current === null) {
+    repositoryRef.current =
+      repository ??
+      new LocalStorageProgressRepository(unit.id, unit.activity.config.starterCode);
+  }
 
   // Motor Python (Worker + Pyodide) começa a carregar assim que a unidade monta.
   useEffect(() => {
@@ -46,6 +65,31 @@ export const Workspace: React.FC = () => {
       engineRef.current = null;
     };
   }, []);
+
+  // Carrega o progresso persistido assim que a unidade monta (ou mantém o
+  // progresso inicial se não houver nada salvo ainda).
+  useEffect(() => {
+    let cancelled = false;
+    repositoryRef.current?.load().then((loaded) => {
+      if (cancelled) return;
+      setProgress(loaded);
+      setCode(loaded.units[unit.id]?.code ?? unit.activity.config.starterCode);
+      setIsProgressLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Salva automaticamente sempre que o progresso mudar de fato (funções do
+  // núcleo retornam a mesma referência quando não há alteração efetiva, então
+  // esse efeito não dispara à toa). Só começa depois do load inicial terminar,
+  // para não sobrescrever dados salvos com o estado inicial vazio.
+  useEffect(() => {
+    if (!isProgressLoaded) return;
+    repositoryRef.current?.save(progress);
+  }, [progress, isProgressLoaded]);
 
   const unitProgress = progress.units[unit.id] || {
     code: unit.activity.config.starterCode,
@@ -66,6 +110,8 @@ export const Workspace: React.FC = () => {
   const handleResetProgress = () => {
     const confirmRestore = window.confirm("Deseja realmente restaurar o código inicial?");
     if (!confirmRestore) return;
+
+    repositoryRef.current?.reset();
 
     const updated = resetUnitProgress(progress, unit.id, unit.activity.config.starterCode);
     setProgress(updated);
@@ -111,10 +157,15 @@ export const Workspace: React.FC = () => {
   };
 
   // O código muda depois de um Executar invalida o resultado técnico: evita
-  // verificar um resultado antigo contra um código já diferente.
+  // verificar um resultado antigo contra um código já diferente. Também
+  // mantém progress.units[unitId].code sincronizado com o buffer vivo do
+  // editor, que é o que fica persistido (não existe um campo separado).
   const handleCodeChange = (value: string) => {
     setCode(value);
     setFeedback(null);
+    setProgress((current) =>
+      updateUnitCode(current, unit.id, value, unit.activity.config.starterCode)
+    );
   };
 
   const handleOpenDeepDive = () => {

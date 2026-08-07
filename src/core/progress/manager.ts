@@ -121,6 +121,33 @@ export function updateDeepDiveStatus(
   };
 }
 
+export function updateUnitCode(
+  progress: UserProgress,
+  unitId: string,
+  code: string,
+  starterCode: string = ""
+): UserProgress {
+  const unitProgress = getOrCreateUnitProgress(progress, unitId, starterCode);
+
+  if (unitProgress.code === code) {
+    return progress;
+  }
+
+  const updatedUnit: UnitProgress = {
+    ...unitProgress,
+    code,
+    lastActivityAt: new Date().toISOString(),
+  };
+
+  return {
+    ...progress,
+    units: {
+      ...progress.units,
+      [unitId]: updatedUnit,
+    },
+  };
+}
+
 export function resetUnitProgress(progress: UserProgress, unitId: string, starterCode: string): UserProgress {
   const updatedUnit: UnitProgress = {
     unitId,
