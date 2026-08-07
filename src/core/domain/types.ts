@@ -14,6 +14,7 @@ export interface ActivityResult {
     | "runtime_error"
     | "timeout"
     | "no_output"
+    | "output_limit"
     | "internal_error";
   message: string;
   output?: string;

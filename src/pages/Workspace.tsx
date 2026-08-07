@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MainLayout } from "../components/layout/MainLayout";
 import { Header } from "../components/navigation/Header";
 import { Sidebar } from "../components/navigation/Sidebar";
@@ -15,6 +15,8 @@ import {
   resetUnitProgress,
 } from "../core/progress/manager";
 import type { UserProgress, ActivityResult } from "../core/domain/types";
+import { CodeActivityEngine } from "../activities/code/engine/CodeActivityEngine";
+import type { EngineStatus } from "../activities/code/worker/protocol";
 
 // Conteúdo JSON pedagógico real
 import unitData from "../content/courses/python-iniciante/units/1.1-print.json";
@@ -29,6 +31,19 @@ export const Workspace: React.FC = () => {
   const [stdout, setStdout] = useState<string>("");
   const [feedback, setFeedback] = useState<ActivityResult | null>(null);
   const [showDeepDive, setShowDeepDive] = useState(false);
+  const [engineStatus, setEngineStatus] = useState<EngineStatus>("loading");
+  const [isRunning, setIsRunning] = useState(false);
+  const engineRef = useRef<CodeActivityEngine | null>(null);
+
+  // Motor Python (Worker + Pyodide) começa a carregar assim que a unidade monta.
+  useEffect(() => {
+    const created = new CodeActivityEngine(setEngineStatus);
+    engineRef.current = created;
+    return () => {
+      created.dispose();
+      engineRef.current = null;
+    };
+  }, []);
 
   const unitProgress = progress.units[unit.id] || {
     code: unit.activity.config.starterCode,
@@ -57,9 +72,21 @@ export const Workspace: React.FC = () => {
     setFeedback(null);
   };
 
-  // Botão Executar nesta etapa existe apenas visualmente sem executar código real
-  const handleExecute = () => {
-    // Placeholder sem execução nesta etapa
+  // Executar roda o código no motor técnico (Worker + Pyodide) e mostra saída/erros.
+  // Não marca conclusão nem registra tentativa pedagógica — isso é responsabilidade
+  // do Verificar (Etapa 8).
+  const handleExecute = async () => {
+    const engine = engineRef.current;
+    if (!engine || engineStatus !== "ready" || isRunning) return;
+
+    setIsRunning(true);
+    try {
+      const result = await engine.execute(code, unit.activity.config);
+      setStdout(result.output ?? "");
+      setFeedback(result);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   // Botão Verificar nesta etapa existe apenas visualmente sem verificar código real
@@ -155,9 +182,12 @@ export const Workspace: React.FC = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={handleExecute}
-                  className="px-4 py-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500"
+                  disabled={engineStatus !== "ready" || isRunning}
+                  className="px-4 py-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500 disabled:opacity-40 disabled:hover:bg-slate-800"
                 >
-                  Executar
+                  {engineStatus === "loading" && "Carregando motor Python…"}
+                  {engineStatus === "error" && "Motor indisponível"}
+                  {engineStatus === "ready" && (isRunning ? "Executando…" : "Executar")}
                 </button>
                 <button
                   onClick={handleVerify}

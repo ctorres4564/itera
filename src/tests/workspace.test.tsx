@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { act, render, screen, fireEvent } from "@testing-library/react";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import { Workspace } from "../pages/Workspace";
+import { installMockWorker, latestWorker } from "./testUtils/mockWorker";
 
 vi.mock("codemirror", () => {
   return {
@@ -12,6 +13,10 @@ vi.mock("@codemirror/lang-python", () => {
   return {
     python: () => [],
   };
+});
+
+beforeEach(() => {
+  installMockWorker();
 });
 
 describe("Workspace - Interface da Unidade Pedagógica", () => {
@@ -70,6 +75,9 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
 
   it("deve renderizar a área de prática com editor, painéis de saída, dicas e botões de ação", () => {
     render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
 
     expect(screen.getByRole("textbox", { name: /Editor de código/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Executar" })).toBeInTheDocument();
@@ -80,18 +88,71 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
     expect(screen.getByText("Painel de Saída:")).toBeInTheDocument();
   });
 
-  it("deve garantir que clicar em Executar não produz saída simulada", () => {
+  it("mantém o botão Executar desabilitado enquanto o motor Python está carregando", () => {
     render(<Workspace />);
+
+    const executeButton = screen.getByRole("button", { name: /Carregando motor Python/i });
+    expect(executeButton).toBeDisabled();
+  });
+
+  it("deve executar o código real no motor (Worker/Pyodide) e exibir a saída retornada", async () => {
+    render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
+
     const executeButton = screen.getByRole("button", { name: "Executar" });
     fireEvent.click(executeButton);
 
-    // Deve continuar exibindo a mensagem inicial e não a saída simulada anterior
-    expect(screen.queryByText("Meu diário de saúde")).not.toBeInTheDocument();
-    expect(screen.getByText("(Aguardando execução...)")).toBeInTheDocument();
+    const worker = latestWorker();
+    const request = worker.posted[0];
+    expect(request.type).toBe("run");
+
+    await act(async () => {
+      worker.emit({
+        type: "result",
+        requestId: request.requestId,
+        result: {
+          status: "success",
+          message: "Execução concluída.",
+          output: "Meu diário de saúde",
+        },
+      });
+    });
+
+    expect(await screen.findByText("Meu diário de saúde")).toBeInTheDocument();
+    // Executar não marca conclusão nem simula sucesso pedagógico
+    expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
+  });
+
+  it("preserva o código do editor quando a execução retorna um erro técnico", async () => {
+    render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Executar" }));
+    const worker = latestWorker();
+    const request = worker.posted[0];
+
+    await act(async () => {
+      worker.emit({
+        type: "result",
+        requestId: request.requestId,
+        result: { status: "runtime_error", message: "Erro em tempo de execução.", output: "" },
+      });
+    });
+
+    // O editor continua presente e utilizável — nenhuma falha técnica apaga o código do aluno
+    expect(screen.getByRole("textbox", { name: /Editor de código/i })).toBeInTheDocument();
+    expect(await screen.findByText("Erro em tempo de execução.")).toBeInTheDocument();
   });
 
   it("deve garantir que clicar em Verificar não registra tentativa e não conclui a unidade", () => {
     render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
     const verifyButton = screen.getByRole("button", { name: "Verificar" });
     fireEvent.click(verifyButton);
 

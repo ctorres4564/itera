@@ -1,9 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, it, expect } from 'vitest';
 
 import App from '../App';
+import { installMockWorker } from './testUtils/mockWorker';
 
 describe('App', () => {
+  beforeEach(() => {
+    installMockWorker();
+  });
+
   it('renders the Workspace header and sidebar', () => {
     render(<App />);
     

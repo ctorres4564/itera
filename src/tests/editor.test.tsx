@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { act, render, screen, fireEvent } from "@testing-library/react";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 
 import { CodeEditor } from "../components/editor/CodeEditor";
 import { Workspace } from "../pages/Workspace";
+import { installMockWorker, latestWorker } from "./testUtils/mockWorker";
 
 // Mock mínimo para o CodeMirror 6 no ambiente JSDOM
 vi.mock("codemirror", () => {
@@ -15,6 +16,10 @@ vi.mock("@codemirror/lang-python", () => {
   return {
     python: () => [],
   };
+});
+
+beforeEach(() => {
+  installMockWorker();
 });
 
 describe("CodeEditor - Componente Controlado do CodeMirror 6", () => {
@@ -47,18 +52,29 @@ describe("Workspace com CodeEditor Integrado", () => {
     confirmSpy.mockRestore();
   });
 
-  it("deve garantir que os botões Executar e Verificar não geram saídas ou registros simulados nesta etapa", () => {
+  it("deve garantir que Executar roda o código real no motor e Verificar continua sem lógica pedagógica nesta etapa", async () => {
     render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
 
     const executeButton = screen.getByRole("button", { name: "Executar" });
     const verifyButton = screen.getByRole("button", { name: "Verificar" });
 
-    // Clica em Executar
+    // Clica em Executar — agora produz saída real vinda do motor (Worker mockado)
     fireEvent.click(executeButton);
-    expect(screen.queryByText("Meu diário de saúde")).not.toBeInTheDocument();
-    expect(screen.getByText("(Aguardando execução...)")).toBeInTheDocument();
+    const worker = latestWorker();
+    const request = worker.posted[0];
+    await act(async () => {
+      worker.emit({
+        type: "result",
+        requestId: request.requestId,
+        result: { status: "success", message: "Execução concluída.", output: "Meu diário de saúde" },
+      });
+    });
+    expect(await screen.findByText("Meu diário de saúde")).toBeInTheDocument();
 
-    // Clica em Verificar
+    // Clica em Verificar — continua sem lógica pedagógica nesta etapa
     fireEvent.click(verifyButton);
     expect(screen.queryByText("A mensagem foi exibida corretamente.")).not.toBeInTheDocument();
     expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
