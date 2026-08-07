@@ -4,6 +4,8 @@ import { Header } from "../components/navigation/Header";
 import { Sidebar } from "../components/navigation/Sidebar";
 import { FeedbackPanel } from "../components/feedback/FeedbackPanel";
 import { DeepDivePanel } from "../components/deep-dive/DeepDivePanel";
+import { CodeEditor } from "../components/editor/CodeEditor";
+import { EditorToolbar } from "../components/editor/EditorToolbar";
 
 import { loadUnit } from "../core/curriculum/loader";
 import {
@@ -45,6 +47,9 @@ export const Workspace: React.FC = () => {
 
   // Lógica de reset
   const handleResetProgress = () => {
+    const confirmRestore = window.confirm("Deseja realmente restaurar o código inicial?");
+    if (!confirmRestore) return;
+
     const updated = resetUnitProgress(progress, unit.id, unit.activity.config.starterCode);
     setProgress(updated);
     setCode(unit.activity.config.starterCode);
@@ -137,18 +142,12 @@ export const Workspace: React.FC = () => {
         {/* Lado Direito: Área de Prática */}
         <section className="lg:col-span-6 space-y-6" aria-label="Área de Prática">
           <div className="bg-slate-950 border border-slate-800 rounded-lg overflow-hidden flex flex-col">
-            <div className="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 tracking-wider">Editor de Código</span>
-              <span className="text-xs text-slate-500">Python</span>
-            </div>
+            <EditorToolbar />
 
-            {/* Simulação do Editor */}
-            <textarea
+            {/* Editor CodeMirror 6 Controlado */}
+            <CodeEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full h-48 p-4 bg-slate-950 text-slate-300 font-mono text-sm border-0 focus:ring-0 resize-none outline-none"
-              aria-label="Editor de código"
-              placeholder="# Escreva seu código aqui"
+              onChange={setCode}
             />
 
             {/* Ações */}

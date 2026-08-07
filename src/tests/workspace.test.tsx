@@ -1,6 +1,18 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { Workspace } from "../pages/Workspace";
+
+vi.mock("codemirror", () => {
+  return {
+    basicSetup: [],
+  };
+});
+
+vi.mock("@codemirror/lang-python", () => {
+  return {
+    python: () => [],
+  };
+});
 
 describe("Workspace - Interface da Unidade Pedagógica", () => {
   it("deve renderizar elementos essenciais da unidade (cabeçalho, barra de progresso, sidebar, objetivo e conteudo essencial)", () => {
