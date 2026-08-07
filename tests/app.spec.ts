@@ -27,3 +27,27 @@ test('executa código Python real no motor (Worker + Pyodide) e exibe a saída',
   // exact: true evita colidir com o literal de string destacado dentro do editor
   await expect(page.getByText('ola do motor python', { exact: true })).toBeVisible({ timeout: 15_000 });
 });
+
+test('fluxo pedagógico completo: Executar produz saída real e Verificar conclui a unidade', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+
+  const editor = page.getByRole('textbox', { name: 'Editor de código' });
+  await editor.click();
+  await page.keyboard.press('Control+A');
+  await page.keyboard.type('print("Meu diário de saúde")');
+
+  const executeButton = page.getByRole('button', { name: 'Executar' });
+  await expect(executeButton).toBeEnabled({ timeout: 90_000 });
+  await executeButton.click();
+
+  await expect(page.getByText('Meu diário de saúde', { exact: true })).toBeVisible({ timeout: 15_000 });
+
+  const verifyButton = page.getByRole('button', { name: 'Verificar' });
+  await expect(verifyButton).toBeEnabled();
+  await verifyButton.click();
+
+  await expect(page.getByText('A mensagem foi exibida corretamente.')).toBeVisible();
+  await expect(page.getByText('Concluído')).toBeVisible();
+  await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
+});

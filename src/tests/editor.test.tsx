@@ -52,16 +52,15 @@ describe("Workspace com CodeEditor Integrado", () => {
     confirmSpy.mockRestore();
   });
 
-  it("deve garantir que Executar roda o código real no motor e Verificar continua sem lógica pedagógica nesta etapa", async () => {
+  it("deve garantir que Executar roda o código real no motor e Verificar traduz o resultado em feedback pedagógico", async () => {
     render(<Workspace />);
     act(() => {
       latestWorker().emit({ type: "ready" });
     });
 
     const executeButton = screen.getByRole("button", { name: "Executar" });
-    const verifyButton = screen.getByRole("button", { name: "Verificar" });
 
-    // Clica em Executar — agora produz saída real vinda do motor (Worker mockado)
+    // Clica em Executar — produz saída real vinda do motor (Worker mockado)
     fireEvent.click(executeButton);
     const worker = latestWorker();
     const request = worker.posted[0];
@@ -73,11 +72,13 @@ describe("Workspace com CodeEditor Integrado", () => {
       });
     });
     expect(await screen.findByText("Meu diário de saúde")).toBeInTheDocument();
-
-    // Clica em Verificar — continua sem lógica pedagógica nesta etapa
-    fireEvent.click(verifyButton);
-    expect(screen.queryByText("A mensagem foi exibida corretamente.")).not.toBeInTheDocument();
+    // Executar sozinho ainda não conclui a unidade
     expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
+
+    // Clica em Verificar — agora traduz o resultado técnico em feedback pedagógico
+    fireEvent.click(screen.getByRole("button", { name: "Verificar" }));
+    expect(await screen.findByText("A mensagem foi exibida corretamente.")).toBeInTheDocument();
+    expect(screen.getByText("Concluído")).toBeInTheDocument();
   });
 
   it("deve sincronizar o valor interno do CodeEditor quando a prop value for alterada externamente", () => {

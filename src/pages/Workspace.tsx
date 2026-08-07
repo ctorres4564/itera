@@ -13,10 +13,12 @@ import {
   unlockHint,
   updateDeepDiveStatus,
   resetUnitProgress,
+  registerAttempt,
 } from "../core/progress/manager";
 import type { UserProgress, ActivityResult } from "../core/domain/types";
 import { CodeActivityEngine } from "../activities/code/engine/CodeActivityEngine";
 import type { EngineStatus } from "../activities/code/worker/protocol";
+import { verifyActivityResult } from "../activities/code/verifier/OutputVerifier";
 
 // Conteúdo JSON pedagógico real
 import unitData from "../content/courses/python-iniciante/units/1.1-print.json";
@@ -74,7 +76,7 @@ export const Workspace: React.FC = () => {
 
   // Executar roda o código no motor técnico (Worker + Pyodide) e mostra saída/erros.
   // Não marca conclusão nem registra tentativa pedagógica — isso é responsabilidade
-  // do Verificar (Etapa 8).
+  // exclusiva do Verificar.
   const handleExecute = async () => {
     const engine = engineRef.current;
     if (!engine || engineStatus !== "ready" || isRunning) return;
@@ -89,9 +91,30 @@ export const Workspace: React.FC = () => {
     }
   };
 
-  // Botão Verificar nesta etapa existe apenas visualmente sem verificar código real
+  // Verificar traduz o ActivityResult técnico do último Executar em resultado
+  // pedagógico, registra a tentativa e conclui a unidade quando apropriado.
+  // Não reexecuta código — trabalha só sobre o resultado já produzido pelo motor.
   const handleVerify = () => {
-    // Placeholder sem verificação nesta etapa
+    if (!feedback) return;
+
+    const verified = verifyActivityResult(feedback, unit.activity.config.expectedOutput);
+    setFeedback(verified);
+
+    const updated = registerAttempt(
+      progress,
+      unit.id,
+      code,
+      verified,
+      unit.activity.config.starterCode
+    );
+    setProgress(updated);
+  };
+
+  // O código muda depois de um Executar invalida o resultado técnico: evita
+  // verificar um resultado antigo contra um código já diferente.
+  const handleCodeChange = (value: string) => {
+    setCode(value);
+    setFeedback(null);
   };
 
   const handleOpenDeepDive = () => {
@@ -174,7 +197,7 @@ export const Workspace: React.FC = () => {
             {/* Editor CodeMirror 6 Controlado */}
             <CodeEditor
               value={code}
-              onChange={setCode}
+              onChange={handleCodeChange}
             />
 
             {/* Ações */}
@@ -191,7 +214,8 @@ export const Workspace: React.FC = () => {
                 </button>
                 <button
                   onClick={handleVerify}
-                  className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded transition-colors focus:ring-2 focus:ring-indigo-500"
+                  disabled={!feedback}
+                  className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded transition-colors focus:ring-2 focus:ring-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600"
                 >
                   Verificar
                 </button>

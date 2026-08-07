@@ -148,16 +148,66 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
     expect(await screen.findByText("Erro em tempo de execução.")).toBeInTheDocument();
   });
 
-  it("deve garantir que clicar em Verificar não registra tentativa e não conclui a unidade", () => {
+  it("mantém o botão Verificar desabilitado antes da primeira execução", () => {
     render(<Workspace />);
     act(() => {
       latestWorker().emit({ type: "ready" });
     });
-    const verifyButton = screen.getByRole("button", { name: "Verificar" });
-    fireEvent.click(verifyButton);
 
-    // Não deve registrar progresso simulado ou marcar como concluído
-    expect(screen.queryByText("A mensagem foi exibida corretamente.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Verificar" })).toBeDisabled();
+  });
+
+  it("ao verificar uma saída correta, registra a tentativa, conclui a unidade e não reexecuta o código", async () => {
+    render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Executar" }));
+    const worker = latestWorker();
+    const runRequest = worker.posted[0];
+    await act(async () => {
+      worker.emit({
+        type: "result",
+        requestId: runRequest.requestId,
+        result: { status: "success", message: "Execução concluída.", output: "Meu diário de saúde" },
+      });
+    });
+
+    expect(screen.getByRole("button", { name: "Verificar" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: "Verificar" }));
+
+    expect(await screen.findByText("A mensagem foi exibida corretamente.")).toBeInTheDocument();
+    expect(screen.getByText("Concluído")).toBeInTheDocument();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "100");
+
+    // Verificar não reexecuta: nenhuma nova mensagem "run" foi postada ao worker
+    expect(worker.posted).toHaveLength(1);
+  });
+
+  it("ao verificar uma saída incorreta, registra a tentativa sem concluir a unidade", async () => {
+    render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Executar" }));
+    const worker = latestWorker();
+    const runRequest = worker.posted[0];
+    await act(async () => {
+      worker.emit({
+        type: "result",
+        requestId: runRequest.requestId,
+        result: { status: "success", message: "Execução concluída.", output: "mensagem errada" },
+      });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Verificar" }));
+
+    expect(
+      await screen.findByText("Seu programa executou, mas a mensagem exibida não corresponde ao objetivo.")
+    ).toBeInTheDocument();
     expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
   });
 });
