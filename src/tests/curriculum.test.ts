@@ -142,4 +142,27 @@ describe("Schemas de Currículo (Zod)", () => {
       expect(result.success).toBe(false);
     });
   });
+
+  describe("Validação de Conteúdo Real (JSON)", () => {
+    it("deve validar com sucesso o course.json real", async () => {
+      const courseJson = await import("../content/courses/python-iniciante/course.json");
+      const result = courseSchema.safeParse(courseJson.default);
+      expect(result.success).toBe(true);
+    });
+
+    it("deve validar com sucesso o fundamentos-interacao.json real", async () => {
+      const trackJson = await import("../content/courses/python-iniciante/tracks/fundamentos-interacao.json");
+      const result = trackSchema.safeParse(trackJson.default);
+      expect(result.success).toBe(true);
+    });
+
+    it("deve validar com sucesso o 1.1-print.json real", async () => {
+      const unitJson = await import("../content/courses/python-iniciante/units/1.1-print.json");
+      const result = unitSchema.safeParse(unitJson.default || unitJson);
+      if (!result.success) {
+        console.error("Zod Parse Errors:", JSON.stringify(result.error.format(), null, 2));
+      }
+      expect(result.success).toBe(true);
+    });
+  });
 });

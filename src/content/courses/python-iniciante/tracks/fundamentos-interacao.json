@@ -1,0 +1,7 @@
+{
+  "id": "fundamentos-interacao",
+  "courseId": "python-iniciante",
+  "title": "Fundamentos de interação",
+  "order": 1,
+  "units": ["1.1-print"]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "1.1-print",
+  "courseId": "python-iniciante",
+  "trackId": "fundamentos-interacao",
+  "title": "Exibindo mensagens com print()",
+  "order": 1,
+  "objectives": [
+    "Exibir uma mensagem no painel de saída"
+  ],
+  "essential": {
+    "purpose": "Programas de computador frequentemente precisam exibir informações para quem os utiliza, seja um texto na tela, um relatório ou um aviso de progresso.",
+    "behavior": "No Python, a ferramenta padrão para exibir mensagens na tela é a função `print()`. Para usá-la, escrevemos o nome da função em letras minúsculas, abrimos parênteses, colocamos o texto que queremos exibir entre aspas (duplas ou simples) e fechamos parênteses.",
+    "example": "print(\"Olá\")",
+    "application": "print(\"Meu diário de saúde\")"
+  },
+  "deepDive": {
+    "enabled": true,
+    "origin": "A exibição de mensagens textual (chamada de output ou saída de dados) é um dos recursos mais antigos do desenvolvimento de software. Computadores usam saídas na tela para que os desenvolvedores consigam entender o fluxo de execução e usuários interajam com o sistema de forma clara.",
+    "terminal": "O terminal (ou console) é a ferramenta de modo texto do sistema operacional. Ele funciona inteiramente baseado em digitação e respostas textuais da aplicação, sem interfaces gráficas complexas.",
+    "stdout": "O sistema operacional fornece um canal padrão de saída chamado `stdout` (standard output). Quando executamos `print()` no Python, o interpretador redireciona esses caracteres para esse canal de saída textual.",
+    "evolution": "No Python 2, a instrução `print` era uma palavra-chave (ex: `print \"Mensagem\"`), sem a necessidade de parênteses. A partir do Python 3, ela se tornou obrigatoriamente uma função, exigindo parênteses como qualquer chamada funcional regular (ex: `print(\"Mensagem\")`).",
+    "internalBehavior": "Quando você chama a função `print()`, o Python pega a mensagem dentro dos parênteses, converte-a para uma cadeia de caracteres, adiciona automaticamente um caractere invisível de quebra de linha ao final e a envia para a saída padrão (`stdout`). O terminal recebe esse fluxo e desenha os caracteres correspondentes na sua tela.",
+    "comparisons": "Em Python escrevemos `print(\"Olá\")`. Em JavaScript, usamos `console.log(\"Olá\")`. Em Java, o equivalente é `System.out.println(\"Olá\");`.",
+    "goodPractices": "Escreva saídas diretas e fáceis de compreender. Evite poluír a tela com informações excessivas ou mensagens confusas de depuração para usuários finais.",
+    "curiosities": "O nome `print` (imprimir) é herdado dos tempos antigos da computação, onde o resultado dos programas era literalmente impresso em papel física nas teleimpressoras e cartões perfurados.",
+    "extraChallenge": "Desafio extra: Escreva um programa que exiba duas mensagens diferentes, cada uma em sua própria linha (por exemplo, exibindo duas mensagens usando duas chamadas distintas de `print`)."
+  },
+  "activity": {
+    "type": "code",
+    "config": {
+      "language": "python",
+      "starterCode": "# Escreva seu código abaixo\n",
+      "expectedOutput": "Meu diário de saúde",
+      "timeoutMs": 3000,
+      "maxOutputCharacters": 5000
+    }
+  },
+  "hints": [
+    "Use uma função que exibe informações.",
+    "A função se chama print.",
+    "A mensagem deve ficar entre aspas.",
+    "A mensagem e as aspas ficam dentro dos parênteses.",
+    "Estrutura: print(\"mensagem\")"
+  ]
+}

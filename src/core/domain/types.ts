@@ -83,6 +83,8 @@ export interface UnitEssential {
 export interface UnitDeepDive {
   enabled: boolean;
   origin: string;
+  terminal?: string;
+  stdout?: string;
   evolution: string;
   internalBehavior: string;
   comparisons: string;

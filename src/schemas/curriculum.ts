@@ -32,6 +32,8 @@ export const unitEssentialSchema = z.object({
 export const unitDeepDiveSchema = z.object({
   enabled: z.boolean(),
   origin: z.string(),
+  terminal: z.string().optional(),
+  stdout: z.string().optional(),
   evolution: z.string(),
   internalBehavior: z.string(),
   comparisons: z.string(),
