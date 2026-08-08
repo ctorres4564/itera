@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MainLayout } from "../components/layout/MainLayout";
 import { Header } from "../components/navigation/Header";
 import { Sidebar } from "../components/navigation/Sidebar";
@@ -10,6 +10,7 @@ import { EditorToolbar } from "../components/editor/EditorToolbar";
 import { loadUnit } from "../core/curriculum/loader";
 import {
   createInitialProgress,
+  createInitialUnitProgress,
   unlockHint,
   updateDeepDiveStatus,
   updateUnitCode,
@@ -32,7 +33,9 @@ interface WorkspaceProps {
 }
 
 export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
-  const unit = loadUnit(unitData);
+  // O conteúdo da unidade é estático (mesmo import a cada render); memoizar
+  // evita revalidar o schema Zod em todo render sem mudar nenhum comportamento.
+  const unit = useMemo(() => loadUnit(unitData), []);
   const [progress, setProgress] = useState<UserProgress>(() =>
     createInitialProgress(unit.id, unit.activity.config.starterCode)
   );
@@ -91,12 +94,9 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
     repositoryRef.current?.save(progress);
   }, [progress, isProgressLoaded]);
 
-  const unitProgress = progress.units[unit.id] || {
-    code: unit.activity.config.starterCode,
-    completed: false,
-    unlockedHintsCount: 0,
-    deepDiveStatus: "not_started",
-  };
+  const unitProgress =
+    progress.units[unit.id] ||
+    createInitialUnitProgress(unit.id, unit.activity.config.starterCode);
 
   const progressPercent = unitProgress.completed ? 100 : 0;
 
@@ -106,11 +106,9 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
     setProgress(updated);
   };
 
-  // Lógica de reset
-  const handleResetProgress = () => {
-    const confirmRestore = window.confirm("Deseja realmente restaurar o código inicial?");
-    if (!confirmRestore) return;
-
+  // Reset de fato — sem confirmação própria, pois quem chama já confirmou
+  // (o modal do Header ou o window.confirm do botão Restaurar).
+  const performReset = () => {
     repositoryRef.current?.reset();
 
     const updated = resetUnitProgress(progress, unit.id, unit.activity.config.starterCode);
@@ -118,6 +116,18 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
     setCode(unit.activity.config.starterCode);
     setStdout("");
     setFeedback(null);
+  };
+
+  // Botão "Restaurar" da área de prática: confirma e reseta. O texto reflete
+  // o que a ação realmente faz (não é só o código — progresso, tentativas,
+  // dicas e aprofundamento também são apagados), igual ao modal do Header.
+  const handleResetProgress = () => {
+    const confirmRestore = window.confirm(
+      "Deseja realmente restaurar esta unidade? O código, o progresso, as tentativas, as dicas liberadas e o aprofundamento serão apagados."
+    );
+    if (!confirmRestore) return;
+
+    performReset();
   };
 
   // Executar roda o código no motor técnico (Worker + Pyodide) e mostra saída/erros.
@@ -180,7 +190,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
         <Header
           courseTitle="Python para iniciantes"
           progressPercent={progressPercent}
-          onReset={handleResetProgress}
+          onReset={performReset}
         />
       }
       sidebar={<Sidebar currentUnitId={unit.id} />}
@@ -307,7 +317,10 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
           {/* Painel de Saída */}
           <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-2">
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Painel de Saída:</h4>
-            <pre className="font-mono text-xs text-slate-300 min-h-12 bg-slate-900/60 p-3 rounded overflow-x-auto whitespace-pre-wrap">
+            <pre
+              className="font-mono text-xs text-slate-300 min-h-12 bg-slate-900/60 p-3 rounded overflow-x-auto whitespace-pre-wrap"
+              aria-live="polite"
+            >
               {stdout || "(Aguardando execução...)"}
             </pre>
           </div>

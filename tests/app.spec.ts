@@ -82,3 +82,26 @@ test('persistência local: código, conclusão e progresso sobrevivem a um reloa
   await expect(page.getByText('Concluído')).toBeVisible();
   await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
 });
+
+test('saída excedida interrompe a execução de verdade, sem depender do timeout', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+
+  const editor = page.getByRole('textbox', { name: 'Editor de código' });
+  await editor.click();
+  await page.keyboard.press('Control+A');
+  await page.keyboard.type('while True: print("x" * 100)');
+
+  const executeButton = page.getByRole('button', { name: 'Executar' });
+  await expect(executeButton).toBeEnabled({ timeout: 90_000 });
+  await executeButton.click();
+
+  // O watchdog embutido no motor (dentro do Worker) interrompe a execução
+  // assim que ultrapassa 5000 caracteres — bem antes dos 3000ms de timeout.
+  await expect(
+    page.getByText('A saída excedeu o limite de 5000 caracteres.')
+  ).toBeVisible({ timeout: 10_000 });
+
+  const output = await page.locator('pre[aria-live="polite"]').textContent();
+  expect(output).toHaveLength(5000);
+});

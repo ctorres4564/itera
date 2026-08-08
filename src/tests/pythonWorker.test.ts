@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PythonWorkerClient, type RunConfig } from "../activities/code/worker/workerClient";
 import { CodeActivityEngine } from "../activities/code/engine/CodeActivityEngine";
+import type { WorkerResponse } from "../activities/code/worker/protocol";
 import { installMockWorker, latestWorker } from "./testUtils/mockWorker";
 
 const DEFAULT_CONFIG: RunConfig = { timeoutMs: 3000, maxOutputCharacters: 5000 };
@@ -212,6 +213,39 @@ describe("PythonWorkerClient - protocolo Worker/motor (Worker mockado)", () => {
     const result = await client.run("print(1)", DEFAULT_CONFIG);
     expect(result.status).toBe("internal_error");
     expect(worker.posted).toHaveLength(0);
+  });
+
+  it("dispose() resolve uma execução pendente em vez de deixá-la pendurada para sempre", async () => {
+    const client = new PythonWorkerClient();
+    const worker = latestWorker();
+    worker.emit({ type: "ready" });
+
+    const promise = client.run("while True: pass", DEFAULT_CONFIG);
+    expect(worker.posted).toHaveLength(1);
+
+    client.dispose();
+
+    const result = await promise;
+    expect(result.status).toBe("internal_error");
+    expect(worker.terminated).toBe(true);
+  });
+
+  it("trata mensagem malformada do worker como falha interna e recria o worker", async () => {
+    const client = new PythonWorkerClient();
+    const worker = latestWorker();
+    worker.emit({ type: "ready" });
+
+    const promise = client.run("print(1)", DEFAULT_CONFIG);
+    worker.emit({
+      type: "result",
+      requestId: worker.posted[0].requestId,
+      result: { status: "isso-nao-e-um-status-valido" },
+    } as unknown as WorkerResponse);
+
+    const result = await promise;
+    expect(result.status).toBe("internal_error");
+    expect(worker.terminated).toBe(true);
+    expect(latestWorker()).not.toBe(worker);
   });
 });
 

@@ -46,7 +46,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
           },
           ".cm-gutters": {
             backgroundColor: "#0f172a", // slate-900
-            color: "#475569", // slate-600
+            color: "#94a3b8", // slate-400 (contraste AA sobre slate-900)
             borderRight: "1px solid #1e293b", // slate-800
           },
         }),

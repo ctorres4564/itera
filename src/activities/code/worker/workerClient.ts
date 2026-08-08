@@ -1,5 +1,6 @@
 import type { ActivityResult } from "../../../core/domain/types";
 import type { EngineStatus, WorkerRequest, WorkerResponse } from "./protocol";
+import { isWorkerResponse } from "./protocol";
 
 function createRequestId(): string {
   if (
@@ -81,21 +82,27 @@ export class PythonWorkerClient {
   }
 
   dispose(): void {
-    if (this.pending) {
-      clearTimeout(this.pending.timeoutHandle);
-      this.pending = null;
-    }
+    this.resolvePending({
+      status: "internal_error",
+      message: "O motor Python foi descartado antes de concluir a execução.",
+    });
     this.worker.terminate();
   }
 
   private spawnWorker(): Worker {
     this.setStatus("loading");
     const worker = createWorkerInstance();
-    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+    worker.onmessage = (event: MessageEvent<unknown>) => {
+      if (!isWorkerResponse(event.data)) {
+        this.recoverFromWorkerFailure(
+          "O motor Python enviou uma mensagem inesperada."
+        );
+        return;
+      }
       this.handleMessage(event.data);
     };
     worker.onerror = () => {
-      this.handleWorkerError();
+      this.recoverFromWorkerFailure("O motor Python falhou de forma inesperada.");
     };
     return worker;
   }
@@ -103,6 +110,25 @@ export class PythonWorkerClient {
   private setStatus(status: EngineStatus): void {
     this.status = status;
     this.onStatusChange?.(status);
+  }
+
+  // Resolve a execução pendente (se houver) com o resultado dado, limpando o
+  // timeout e o estado interno. Sem efeito se não há nada pendente.
+  private resolvePending(result: ActivityResult): void {
+    if (!this.pending) return;
+    const { resolve, timeoutHandle } = this.pending;
+    clearTimeout(timeoutHandle);
+    this.pending = null;
+    resolve(result);
+  }
+
+  // Encerra o worker atual e cria um novo, resolvendo qualquer execução
+  // pendente com internal_error antes — usado tanto para erro do worker
+  // quanto para mensagens que não batem com o protocolo esperado.
+  private recoverFromWorkerFailure(message: string): void {
+    this.resolvePending({ status: "internal_error", message });
+    this.worker.terminate();
+    this.worker = this.spawnWorker();
   }
 
   private handleMessage(message: WorkerResponse): void {
@@ -117,36 +143,17 @@ export class PythonWorkerClient {
     if (!this.pending || this.pending.requestId !== message.requestId) {
       return;
     }
-    const { resolve, timeoutHandle } = this.pending;
-    clearTimeout(timeoutHandle);
-    this.pending = null;
-    resolve(message.result);
+    this.resolvePending(message.result);
   }
 
   private handleTimeout(requestId: string): void {
     if (!this.pending || this.pending.requestId !== requestId) {
       return;
     }
-    const { resolve } = this.pending;
-    this.pending = null;
-    this.worker.terminate();
-    this.worker = this.spawnWorker();
-    resolve({
+    this.resolvePending({
       status: "timeout",
       message: "A execução excedeu o tempo limite.",
     });
-  }
-
-  private handleWorkerError(): void {
-    if (this.pending) {
-      const { resolve, timeoutHandle } = this.pending;
-      clearTimeout(timeoutHandle);
-      this.pending = null;
-      resolve({
-        status: "internal_error",
-        message: "O motor Python falhou de forma inesperada.",
-      });
-    }
     this.worker.terminate();
     this.worker = this.spawnWorker();
   }

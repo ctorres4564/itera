@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface HeaderProps {
   courseTitle: string;
@@ -8,6 +8,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, onReset }) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const resetButtonRef = useRef<HTMLButtonElement>(null);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleResetClick = () => {
     setShowConfirm(true);
@@ -21,6 +23,23 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
   const handleCancelReset = () => {
     setShowConfirm(false);
   };
+
+  // Move o foco para o modal ao abrir, fecha com Escape e devolve o foco ao
+  // botão "Reiniciar" ao fechar (por qualquer caminho).
+  useEffect(() => {
+    if (!showConfirm) return;
+    cancelButtonRef.current?.focus();
+    const triggerButton = resetButtonRef.current;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowConfirm(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      triggerButton?.focus();
+    };
+  }, [showConfirm]);
 
   return (
     <div className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
@@ -45,6 +64,7 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
 
         {/* Botão de Reiniciar Progresso */}
         <button
+          ref={resetButtonRef}
           onClick={handleResetClick}
           className="px-3 py-1.5 text-xs font-medium text-red-400 hover:text-red-300 bg-red-950/20 hover:bg-red-950/40 border border-red-900/50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
           aria-label="Reiniciar progresso do curso"
@@ -63,6 +83,7 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
             </p>
             <div className="flex justify-end space-x-3">
               <button
+                ref={cancelButtonRef}
                 onClick={handleCancelReset}
                 className="px-4 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500"
               >
