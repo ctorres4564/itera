@@ -30,7 +30,7 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
 
     // Objetivos e Conteúdos
     expect(screen.getByText("Exibindo mensagens com print()")).toBeInTheDocument();
-    expect(screen.getByText("Exibir uma mensagem no painel de saída")).toBeInTheDocument();
+    expect(screen.getByText('Exibir a mensagem "Meu diário de saúde" no painel de saída')).toBeInTheDocument();
   });
 
   it("deve liberar dicas graduais de forma controlada através da lógica de clique", () => {

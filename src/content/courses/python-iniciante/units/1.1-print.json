@@ -5,7 +5,7 @@
   "title": "Exibindo mensagens com print()",
   "order": 1,
   "objectives": [
-    "Exibir uma mensagem no painel de saída"
+    "Exibir a mensagem \"Meu diário de saúde\" no painel de saída"
   ],
   "essential": {
     "purpose": "Programas de computador frequentemente precisam exibir informações para quem os utiliza, seja um texto na tela, um relatório ou um aviso de progresso.",
