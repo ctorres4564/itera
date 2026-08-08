@@ -10,7 +10,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentUnitId }) => {
       <div className="space-y-4">
         <div>
           <h2 className="heading-2 mb-2">
-            Trilha 1 — Fundamentos de interação
+            Trilha 1 — Fundamentos de Programação
           </h2>
           <ul className="space-y-1">
             <li>
