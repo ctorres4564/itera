@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 interface GuideModalProps {
   onClose: () => void;
@@ -183,7 +184,11 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  return (
+  // Renderizado via portal direto em document.body: o cabeçalho tem
+  // backdrop-blur (backdrop-filter), que cria um novo containing block para
+  // elementos fixed — sem o portal, este modal ficaria preso dentro da caixa
+  // do cabeçalho em vez de cobrir a viewport inteira.
+  return createPortal(
     <div
       className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       role="dialog"
@@ -220,7 +225,8 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
           ))}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { GuideModal } from "../guide/GuideModal";
 
 interface HeaderProps {
@@ -83,32 +84,35 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
         </button>
       </div>
 
-      {/* Modal de confirmação acessível */}
-      {showConfirm && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-          <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h2 id="modal-title" className="text-lg font-bold text-slate-100 mb-2">Reiniciar Progresso?</h2>
-            <p className="text-sm text-slate-400 mb-6">
-              Esta ação apagará todo o seu progresso nesta unidade e restaurará o código inicial. Essa ação não pode ser desfeita.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                ref={cancelButtonRef}
-                onClick={handleCancelReset}
-                className="px-4 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleConfirmReset}
-                className="px-4 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-500 rounded transition-colors focus:ring-2 focus:ring-red-500"
-              >
-                Confirmar e Reiniciar
-              </button>
+      {/* Modal de confirmação acessível — via portal (mesmo motivo do GuideModal:
+          o backdrop-blur do cabeçalho quebraria o posicionamento fixed). */}
+      {showConfirm &&
+        createPortal(
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 max-w-md w-full shadow-xl">
+              <h2 id="modal-title" className="text-lg font-bold text-slate-100 mb-2">Reiniciar Progresso?</h2>
+              <p className="text-sm text-slate-400 mb-6">
+                Esta ação apagará todo o seu progresso nesta unidade e restaurará o código inicial. Essa ação não pode ser desfeita.
+              </p>
+              <div className="flex justify-end space-x-3">
+                <button
+                  ref={cancelButtonRef}
+                  onClick={handleCancelReset}
+                  className="px-4 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirmReset}
+                  className="px-4 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-500 rounded transition-colors focus:ring-2 focus:ring-red-500"
+                >
+                  Confirmar e Reiniciar
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
     </div>
