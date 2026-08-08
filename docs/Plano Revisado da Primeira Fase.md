@@ -104,8 +104,6 @@ Responsável por armazenar:
 
 - exemplo;
 
-- aplicação;
-
 - prática;
 
 - dicas;
@@ -274,13 +272,11 @@ Estrutura:
 
 4.  Exemplo
 
-5.  Aplicação
+5.  Prática
 
-6.  Prática
+6.  Feedback
 
-7.  Feedback
-
-8.  Dicas
+7.  Dicas
 
 **7.2 Aprofundamento opcional**
 
@@ -302,7 +298,7 @@ Deverá conter:
 
 - curiosidades;
 
-- desafio extra opcional.
+- desafios conceituais opcionais (perguntas de múltipla escolha sobre o conteúdo da unidade, sem execução de código).
 
 Regra obrigatória:
 
@@ -341,12 +337,6 @@ Apresentar:
 **Exemplo**
 
 print(\"Olá\")
-
-**Aplicação**
-
-Contextualizar com um diário simples:
-
-print(\"Meu diário de saúde\")
 
 **Prática**
 
@@ -596,11 +586,11 @@ System.out.println(\"Olá\");
 
 - diferenciar mensagens para usuário e mensagens de depuração.
 
-**Desafio extra**
+**Desafios conceituais**
 
-Exibir duas mensagens em linhas diferentes.
+Três perguntas de múltipla escolha sobre o conteúdo da unidade, sem execução de código.
 
-Esse desafio não interfere na conclusão principal.
+Esses desafios não interferem na conclusão principal.
 
 ------------------------------------------------------------------------
 
@@ -633,8 +623,6 @@ As futuras unidades poderão aparecer como "em preparação", sem funcionalidade
 - explicação;
 
 - exemplo;
-
-- aplicação;
 
 - prática;
 

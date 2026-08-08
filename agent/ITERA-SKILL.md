@@ -289,13 +289,7 @@ O conteúdo principal deve explicar:
 print("Olá")
 ```
 
-### 6.5 Aplicação
-
-```python
-print("Meu diário de saúde")
-```
-
-### 6.6 Atividade
+### 6.5 Atividade
 
 O aluno deve produzir exatamente esta saída:
 
@@ -303,7 +297,7 @@ O aluno deve produzir exatamente esta saída:
 Meu diário de saúde
 ```
 
-### 6.7 Código inicial
+### 6.6 Código inicial
 
 ```python
 # Escreva seu código abaixo
@@ -322,9 +316,9 @@ Criar uma área separada com:
 - equivalentes em JavaScript e Java;
 - boas práticas;
 - curiosidades;
-- desafio extra.
+- desafios conceituais opcionais.
 
-O desafio extra deve pedir duas mensagens em linhas diferentes.
+Os desafios conceituais são perguntas de múltipla escolha sobre o conteúdo da unidade (não pedem execução de código) e não interferem no progresso principal.
 
 O aprofundamento:
 
@@ -380,7 +374,6 @@ Exibir:
 - para que serve;
 - como funciona;
 - exemplo;
-- aplicação;
 - prática;
 - aprofundamento opcional.
 

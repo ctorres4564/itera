@@ -399,13 +399,11 @@ Deverá conter:
 
 4.  exemplo;
 
-5.  aplicação;
+5.  prática;
 
-6.  prática;
+6.  feedback;
 
-7.  feedback;
-
-8.  dicas.
+7.  dicas.
 
 **12.2 Aprofundamento opcional**
 
@@ -427,7 +425,7 @@ Deverá conter:
 
 - curiosidades;
 
-- desafio extra.
+- desafios conceituais opcionais (perguntas de múltipla escolha sobre o conteúdo da unidade, sem execução de código).
 
 **Regra**
 
@@ -470,17 +468,13 @@ O aluno deverá compreender:
 
 print(\"Olá\")
 
-**13.6 Aplicação contextualizada**
-
-print(\"Meu diário de saúde\")
-
-**13.7 Atividade**
+**13.6 Atividade**
 
 O aluno deverá criar um programa que exiba:
 
 Meu diário de saúde
 
-**13.8 Código inicial**
+**13.7 Código inicial**
 
 \# Escreva seu código abaixo
 
@@ -632,11 +626,11 @@ System.out.println(\"Olá\");
 
 - diferenciar saída para usuário e depuração.
 
-**17.7 Desafio extra**
+**17.7 Desafios conceituais**
 
-Exibir duas mensagens em linhas diferentes.
+Três perguntas de múltipla escolha sobre o conteúdo da unidade, sem execução de código.
 
-O desafio extra não deverá interferir no progresso principal.
+Os desafios conceituais não deverão interferir no progresso principal.
 
 ------------------------------------------------------------------------
 
@@ -935,8 +929,6 @@ Deverá conter:
 - como funciona;
 
 - exemplo;
-
-- aplicação;
 
 - prática;
 

@@ -66,7 +66,6 @@ describe("Schemas de Currículo (Zod)", () => {
           purpose: "Apresentar a saída básica de programas.",
           behavior: "Chamar print() exibe um texto no console.",
           example: "print('Olá')",
-          application: "print('Meu diário de saúde')",
         },
         deepDive: {
           enabled: true,
@@ -76,7 +75,16 @@ describe("Schemas de Currículo (Zod)", () => {
           comparisons: "JS console.log vs Java...",
           goodPractices: "Mensagens claras...",
           curiosities: "História...",
-          extraChallenge: "Exibir em duas linhas...",
+          conceptualChallenges: [
+            {
+              title: "Reconheça o código correto",
+              question: "Qual opção exibe corretamente a mensagem 'Olá'?",
+              options: ["print('Olá')", "Print('Olá')"],
+              optionsAreCode: true,
+              correctOptionIndex: 0,
+              feedback: "print deve ser escrito em letras minúsculas.",
+            },
+          ],
         },
         activity: {
           type: "code",
@@ -113,7 +121,6 @@ describe("Schemas de Currículo (Zod)", () => {
           purpose: "Apresentar a saída básica.",
           behavior: "Chamar print() exibe um texto.",
           example: "print('Olá')",
-          application: "print('Meu diário de saúde')",
         },
         deepDive: {
           enabled: false,
@@ -123,7 +130,7 @@ describe("Schemas de Currículo (Zod)", () => {
           comparisons: "",
           goodPractices: "",
           curiosities: "",
-          extraChallenge: "",
+          conceptualChallenges: [],
         },
         activity: {
           type: "multiple_choice_invalid", // Inexistente
@@ -163,6 +170,15 @@ describe("Schemas de Currículo (Zod)", () => {
         console.error("Zod Parse Errors:", JSON.stringify(result.error.format(), null, 2));
       }
       expect(result.success).toBe(true);
+    });
+
+    it("a Unidade 1.1 deve ter exatamente 3 desafios conceituais (exigência de conteúdo desta unidade, não do schema genérico)", async () => {
+      const unitJson = await import("../content/courses/python-iniciante/units/1.1-print.json");
+      const result = unitSchema.safeParse(unitJson.default || unitJson);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.deepDive.conceptualChallenges).toHaveLength(3);
+      }
     });
   });
 });

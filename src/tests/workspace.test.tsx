@@ -1,4 +1,4 @@
-import { act, render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent, within } from "@testing-library/react";
 import { beforeEach, describe, it, expect, vi } from "vitest";
 import { Workspace } from "../pages/Workspace";
 import { installMockWorker, latestWorker } from "./testUtils/mockWorker";
@@ -31,6 +31,20 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
     // Objetivos e Conteúdos
     expect(screen.getByText("Exibindo mensagens com print()")).toBeInTheDocument();
     expect(screen.getByText('Exibir a mensagem "Meu diário de saúde" no painel de saída')).toBeInTheDocument();
+
+    // A seção "Aplicação" foi removida do percurso essencial
+    expect(screen.queryByText("Aplicação")).not.toBeInTheDocument();
+  });
+
+  it("posiciona o botão de aprofundamento depois da área de Prática, não entre Exemplo e Prática", () => {
+    render(<Workspace />);
+
+    const editorTextbox = screen.getByRole("textbox", { name: /Editor de código/i });
+    const deepDiveButton = screen.getByRole("button", { name: /Quero me aprofundar/i });
+
+    // DOCUMENT_POSITION_FOLLOWING indica que o botão vem depois do editor no DOM
+    const position = editorTextbox.compareDocumentPosition(deepDiveButton);
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("deve liberar dicas graduais de forma controlada através da lógica de clique", () => {
@@ -209,5 +223,22 @@ describe("Workspace - Interface da Unidade Pedagógica", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
+  });
+
+  it("responder a um desafio conceitual do aprofundamento não altera conclusão, progresso ou executa Python", () => {
+    render(<Workspace />);
+    act(() => {
+      latestWorker().emit({ type: "ready" });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Quero me aprofundar/i }));
+    const card = screen.getByTestId("concept-challenge-0");
+    const firstOption = within(card).getAllByRole("button", { name: /^[A-D]\)/ })[0];
+    fireEvent.click(firstOption);
+
+    expect(screen.queryByText("Concluído")).not.toBeInTheDocument();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
+    // Nenhuma mensagem "run" foi postada ao worker — o desafio não executa Python
+    expect(latestWorker().posted).toHaveLength(0);
   });
 });

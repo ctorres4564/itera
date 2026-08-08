@@ -78,7 +78,18 @@ export interface UnitEssential {
   purpose: string;
   behavior: string;
   example: string;
-  application: string;
+}
+
+export interface ConceptualChallenge {
+  title: string;
+  code?: string;
+  expectedOutputDisplay?: string;
+  question: string;
+  options: string[];
+  optionsAreCode: boolean;
+  correctOptionIndex: number;
+  feedback: string;
+  explanation?: string;
 }
 
 export interface UnitDeepDive {
@@ -91,7 +102,7 @@ export interface UnitDeepDive {
   comparisons: string;
   goodPractices: string;
   curiosities: string;
-  extraChallenge: string;
+  conceptualChallenges: ConceptualChallenge[];
 }
 
 export interface Unit {

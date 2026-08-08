@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import type { UnitDeepDive } from "../../core/domain/types";
+import { ConceptChallenge } from "./ConceptChallenge";
 
 interface DeepDivePanelProps {
   deepDive: UnitDeepDive;
@@ -99,12 +100,16 @@ export const DeepDivePanel: React.FC<DeepDivePanelProps> = ({ deepDive, onClose 
           <p className="text-sm text-slate-300 leading-relaxed">{deepDive.curiosities}</p>
         </div>
 
-        <div className="pt-4 border-t border-slate-800/60">
-          <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Desafio Extra</h4>
-          <p className="text-sm text-slate-300 leading-relaxed bg-emerald-950/10 border border-emerald-900/30 p-3 rounded">
-            {deepDive.extraChallenge}
-          </p>
-        </div>
+        {deepDive.conceptualChallenges.length > 0 && (
+          <div className="pt-4 border-t border-slate-800/60 space-y-3">
+            <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              Desafios Conceituais (opcional)
+            </h4>
+            {deepDive.conceptualChallenges.map((challenge, index) => (
+              <ConceptChallenge key={index} challenge={challenge} index={index} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

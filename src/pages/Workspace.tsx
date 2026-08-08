@@ -231,22 +231,6 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
                 {unit.essential.example}
               </pre>
             </div>
-            <div>
-              <h3 className="font-bold text-slate-200 mb-1 text-xs uppercase tracking-wider">Aplicação</h3>
-              <pre className="p-3 bg-slate-950 border border-slate-800 rounded font-mono text-indigo-300 text-xs">
-                {unit.essential.application}
-              </pre>
-            </div>
-          </div>
-
-          {/* Botão de aprofundamento */}
-          <div className="pt-4">
-            <button
-              onClick={handleOpenDeepDive}
-              className="px-4 py-2 text-xs font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-900/40 rounded transition-colors focus:ring-2 focus:ring-indigo-500"
-            >
-              💡 Quero me aprofundar (Opcional)
-            </button>
           </div>
         </section>
 
@@ -328,6 +312,16 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
           {/* Painel de Feedback */}
           <FeedbackPanel result={feedback} />
         </section>
+      </div>
+
+      {/* Aprofundamento opcional — vem depois da Prática, não entre Exemplo e Prática */}
+      <div className="pt-6">
+        <button
+          onClick={handleOpenDeepDive}
+          className="px-4 py-2 text-xs font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-900/40 rounded transition-colors focus:ring-2 focus:ring-indigo-500"
+        >
+          💡 Quero me aprofundar (Opcional)
+        </button>
       </div>
 
       {/* Painel do aprofundamento */}

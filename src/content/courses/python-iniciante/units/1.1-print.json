@@ -10,8 +10,7 @@
   "essential": {
     "purpose": "Programas de computador frequentemente precisam exibir informações para quem os utiliza — um aviso, um título, uma mensagem de status ou qualquer informação relevante para o usuário.",
     "behavior": "No Python, a ferramenta padrão para exibir mensagens na tela é a função `print()`. Para usá-la, escrevemos o nome da função em letras minúsculas, abrimos parênteses, colocamos o texto que queremos exibir entre aspas (duplas ou simples) e fechamos parênteses.",
-    "example": "print(\"Olá\")",
-    "application": "print(\"Consulta iniciada\")"
+    "example": "print(\"Olá\")"
   },
   "deepDive": {
     "enabled": true,
@@ -23,7 +22,50 @@
     "comparisons": "Em Python escrevemos `print(\"Olá\")`. Em JavaScript, usamos `console.log(\"Olá\")`. Em Java, o equivalente é `System.out.println(\"Olá\");`.",
     "goodPractices": "Escreva saídas diretas e fáceis de compreender. Evite poluír a tela com informações excessivas ou mensagens confusas de depuração para usuários finais.",
     "curiosities": "O nome `print` (imprimir) é herdado dos tempos antigos da computação, onde o resultado dos programas era literalmente impresso em papel física nas teleimpressoras e cartões perfurados.",
-    "extraChallenge": "Desafio extra: Escreva um programa que exiba duas mensagens diferentes, cada uma em sua própria linha (por exemplo, exibindo duas mensagens usando duas chamadas distintas de `print`)."
+    "conceptualChallenges": [
+      {
+        "title": "Reconheça o código correto",
+        "question": "Qual opção exibe corretamente a mensagem \"Olá\" em Python?",
+        "options": [
+          "Print(\"Olá\")",
+          "print(\"Olá\")",
+          "print(Olá)",
+          "\"Olá\""
+        ],
+        "optionsAreCode": true,
+        "correctOptionIndex": 1,
+        "feedback": "print deve ser escrito em letras minúsculas, e o texto precisa ficar entre aspas dentro dos parênteses."
+      },
+      {
+        "title": "Encontre o erro",
+        "code": "print(\"Bom dia)",
+        "question": "O que impede esse código de funcionar?",
+        "options": [
+          "Falta fechar as aspas da mensagem.",
+          "print deveria começar com letra maiúscula.",
+          "Os parênteses não podem ser usados.",
+          "A mensagem deveria ficar fora dos parênteses."
+        ],
+        "optionsAreCode": false,
+        "correctOptionIndex": 0,
+        "feedback": "Toda mensagem precisa começar e terminar com aspas.",
+        "explanation": "print(\"Bom dia\")"
+      },
+      {
+        "title": "Qual código produz exatamente esta saída?",
+        "expectedOutputDisplay": "Hoje estudei Python.\nEstou aprendendo print().",
+        "question": "Qual alternativa gera exatamente essa saída?",
+        "options": [
+          "print(\"Hoje estudei Python. Estou aprendendo print().\")",
+          "print(\"Hoje estudei Python.\")\nprint(\"Estou aprendendo print().\")",
+          "print(Hoje estudei Python.)\nprint(Estou aprendendo print().)",
+          "\"Hoje estudei Python.\"\n\"Estou aprendendo print().\""
+        ],
+        "optionsAreCode": true,
+        "correctOptionIndex": 1,
+        "feedback": "Cada chamada de print() produz uma nova linha na saída. Quando queremos duas linhas diferentes, utilizamos duas chamadas de print()."
+      }
+    ]
   },
   "activity": {
     "type": "code",

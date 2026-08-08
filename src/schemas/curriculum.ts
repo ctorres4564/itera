@@ -26,7 +26,20 @@ export const unitEssentialSchema = z.object({
   purpose: z.string(),
   behavior: z.string(),
   example: z.string(),
-  application: z.string(),
+});
+
+// Genérico e reutilizável por qualquer unidade — a quantidade de desafios de
+// uma unidade específica não é uma regra do schema, é conteúdo (ver testes).
+export const conceptualChallengeSchema = z.object({
+  title: z.string(),
+  code: z.string().optional(),
+  expectedOutputDisplay: z.string().optional(),
+  question: z.string(),
+  options: z.array(z.string()).min(2),
+  optionsAreCode: z.boolean(),
+  correctOptionIndex: z.number().int().nonnegative(),
+  feedback: z.string(),
+  explanation: z.string().optional(),
 });
 
 export const unitDeepDiveSchema = z.object({
@@ -39,7 +52,7 @@ export const unitDeepDiveSchema = z.object({
   comparisons: z.string(),
   goodPractices: z.string(),
   curiosities: z.string(),
-  extraChallenge: z.string(),
+  conceptualChallenges: z.array(conceptualChallengeSchema),
 });
 
 export const unitSchema = z.object({

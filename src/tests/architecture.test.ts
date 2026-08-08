@@ -28,3 +28,27 @@ describe("Arquitetura — acesso a localStorage", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+describe("Arquitetura — desafios conceituais são autocontidos", () => {
+  it("ConceptChallenge.tsx não importa motor Python, Worker, verificador ou persistência de progresso", () => {
+    const files = import.meta.glob("../components/deep-dive/ConceptChallenge.tsx", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }) as Record<string, string>;
+
+    const [content] = Object.values(files);
+    expect(content).toBeTruthy();
+
+    const forbiddenPatterns = [
+      /pyodide/i,
+      /\/worker\//,
+      /CodeActivityEngine/,
+      /OutputVerifier/,
+      /ProgressRepository/,
+    ];
+    forbiddenPatterns.forEach((pattern) => {
+      expect(content).not.toMatch(pattern);
+    });
+  });
+});
