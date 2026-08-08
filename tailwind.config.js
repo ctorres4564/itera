@@ -7,33 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Marca
-        "brand-primary": "#6366F1",
-        "brand-primary-hover": "#818CF8",
-        "brand-secondary": "#8B5CF6",
-        accent: "#7DD3FC",
+        // Marca — violeta profundo, identidade autoral do ITERA
+        "brand-primary": "#7C3AED",
+        "brand-primary-hover": "#6D28D9",
+        "brand-secondary": "#A78BFA",
+        accent: "#F472B6",
         // Fundos
-        background: "#020617",
-        surface: "#0F172A",
-        "surface-elevated": "#1E293B",
-        "surface-muted": "rgba(2,6,23,0.6)",
+        background: "#0B0714",
+        surface: "#151022",
+        "surface-elevated": "#21182F",
+        "surface-muted": "#100B1B",
         // Texto
-        "text-primary": "#F1F5F9",
-        "text-secondary": "#CBD5E1",
-        "text-muted": "#94A3B8",
+        "text-primary": "#F8F7FC",
+        "text-secondary": "#D7D0E3",
+        "text-muted": "#9F95B0",
         "text-inverse": "#FFFFFF",
         // Bordas
-        "border-default": "#1E293B",
-        "border-strong": "#475569",
-        // Estados
+        "border-default": "#302541",
+        "border-strong": "#55436D",
+        // Estados (independentes da marca — não usar violeta aqui)
         success: "#6EE7B7",
-        "success-surface": "rgba(2,44,34,0.3)",
+        "success-surface": "#0D2A23",
         warning: "#FCD34D",
-        "warning-surface": "rgba(69,26,3,0.2)",
+        "warning-surface": "#33260A",
         error: "#FCA5A5",
-        "error-surface": "rgba(69,10,10,0.2)",
-        info: "#7DD3FC",
-        focus: "#6366F1",
+        "error-surface": "#351010",
+        info: "#C4B5FD",
+        focus: "#A78BFA",
         // Ação destrutiva sólida (exclusivo — não usar para texto/superfície de feedback)
         "danger-solid": "#DC2626",
         "danger-solid-hover": "#EF4444",

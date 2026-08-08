@@ -17,7 +17,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentUnitId }) => {
               <span
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded transition-colors ${
                   currentUnitId === "1.1-print"
-                    ? "bg-surface-elevated text-brand-primary font-semibold"
+                    ? "bg-surface-elevated text-brand-secondary font-semibold"
                     : "text-text-muted"
                 }`}
                 aria-current={currentUnitId === "1.1-print" ? "page" : undefined}

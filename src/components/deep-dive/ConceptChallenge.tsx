@@ -22,7 +22,7 @@ export const ConceptChallenge: React.FC<ConceptChallengeProps> = ({ challenge, i
 
   return (
     <div
-      className="border border-border-default rounded-lg p-4 space-y-3 bg-background/40"
+      className="border border-border-default rounded-lg p-4 space-y-3 bg-surface-muted"
       data-testid={`concept-challenge-${index}`}
     >
       <h5 className="text-sm font-bold text-text-primary">
@@ -30,7 +30,7 @@ export const ConceptChallenge: React.FC<ConceptChallengeProps> = ({ challenge, i
       </h5>
 
       {challenge.code && (
-        <pre className="p-3 bg-background border border-border-default rounded font-mono text-brand-primary-hover text-xs overflow-x-auto">
+        <pre className="p-3 bg-surface-muted border border-border-default rounded font-mono text-brand-secondary text-xs overflow-x-auto">
           {challenge.code}
         </pre>
       )}
@@ -40,7 +40,7 @@ export const ConceptChallenge: React.FC<ConceptChallengeProps> = ({ challenge, i
           <p className="text-label uppercase tracking-wider mb-1">
             Saída desejada
           </p>
-          <pre className="p-3 bg-background border border-border-default rounded font-mono text-text-secondary text-xs overflow-x-auto whitespace-pre-wrap">
+          <pre className="p-3 bg-surface-muted border border-border-default rounded font-mono text-text-secondary text-xs overflow-x-auto whitespace-pre-wrap">
             {challenge.expectedOutputDisplay}
           </pre>
         </div>
@@ -93,7 +93,7 @@ export const ConceptChallenge: React.FC<ConceptChallengeProps> = ({ challenge, i
           <p className="font-bold mb-1">{isCorrect ? "Correto!" : "Incorreto"}</p>
           <p className="text-text-secondary">{challenge.feedback}</p>
           {challenge.explanation && (
-            <pre className="mt-2 p-2 bg-background/60 rounded font-mono text-text-secondary overflow-x-auto">
+            <pre className="mt-2 p-2 bg-surface-muted rounded font-mono text-text-secondary overflow-x-auto">
               {challenge.explanation}
             </pre>
           )}

@@ -201,7 +201,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
           <div>
             <h2 id="unit-title" className="heading-1 mb-2">{unit.title}</h2>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-semibold px-2.5 py-0.5 bg-brand-primary/10 text-brand-primary border border-brand-primary/30 rounded-full">
+              <span className="text-xs font-semibold px-2.5 py-0.5 bg-brand-primary/10 text-brand-secondary border border-brand-primary/30 rounded-full">
                 Unidade {unit.order}
               </span>
               {unitProgress.completed && (
@@ -227,7 +227,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
             </div>
             <div>
               <h3 className="heading-2 mb-1">Exemplo</h3>
-              <pre className="p-3 bg-background border border-border-default rounded font-mono text-brand-primary-hover text-xs">
+              <pre className="p-3 bg-surface-muted border border-border-default rounded font-mono text-brand-secondary text-xs">
                 {unit.essential.example}
               </pre>
             </div>
@@ -236,7 +236,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
 
         {/* Lado Direito: Área de Prática */}
         <section className="lg:col-span-6 space-y-6" aria-label="Área de Prática">
-          <div className="bg-background border border-border-default rounded-lg overflow-hidden flex flex-col">
+          <div className="bg-surface-muted border border-border-default rounded-lg overflow-hidden flex flex-col">
             <EditorToolbar />
 
             {/* Editor CodeMirror 6 Controlado */}
@@ -251,7 +251,9 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
                 <button
                   onClick={handleExecute}
                   disabled={engineStatus !== "ready" || isRunning}
-                  className="px-4 py-2 text-xs font-bold text-text-secondary bg-surface-elevated hover:bg-border-strong rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-surface-elevated"
+                  // Executar é a ação primária visualmente (identidade de marca): é a
+                  // interação mais frequente do fluxo de prática, mesmo sem concluir a unidade.
+                  className="px-4 py-2 text-xs font-bold text-text-inverse bg-brand-primary hover:bg-brand-primary-hover rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-brand-primary"
                 >
                   {engineStatus === "loading" && "Carregando motor Python…"}
                   {engineStatus === "error" && "Motor indisponível"}
@@ -260,7 +262,8 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
                 <button
                   onClick={handleVerify}
                   disabled={!feedback}
-                  className="px-4 py-2 text-xs font-bold text-text-inverse bg-brand-primary hover:bg-brand-primary-hover rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-brand-primary"
+                  // Distinguível, mas sem competir com Executar — tom neutro elevado.
+                  className="px-4 py-2 text-xs font-bold text-text-secondary bg-surface-elevated hover:bg-border-strong rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-surface-elevated"
                 >
                   Verificar
                 </button>
@@ -299,7 +302,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
           )}
 
           {/* Painel de Saída */}
-          <div className="bg-background border border-border-default rounded-lg p-4 space-y-2">
+          <div className="bg-surface-muted border border-border-default rounded-lg p-4 space-y-2">
             <h4 className="text-label uppercase tracking-wider">Painel de Saída:</h4>
             <pre
               className="font-mono text-xs text-text-secondary min-h-12 bg-surface-muted p-3 rounded overflow-x-auto whitespace-pre-wrap"
@@ -318,7 +321,9 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
       <div className="pt-6">
         <button
           onClick={handleOpenDeepDive}
-          className="px-4 py-2 text-xs font-medium text-brand-primary hover:text-brand-primary-hover bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:ring-2 focus:ring-focus"
+          // text-brand-secondary (não brand-primary) para manter AA sobre o
+          // próprio fundo tingido em ambos os estados — ver docs/design-system.md
+          className="px-4 py-2 text-xs font-medium text-brand-secondary bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:ring-2 focus:ring-focus"
         >
           💡 Quero me aprofundar (Opcional)
         </button>

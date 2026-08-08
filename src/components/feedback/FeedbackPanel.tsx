@@ -55,7 +55,7 @@ export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({ result }) => {
           <h4 className={`text-sm font-bold ${textClass} mb-1`}>{titleText}</h4>
           <p className="text-xs text-text-secondary leading-relaxed">{result.message}</p>
           {result.technicalDetails && (
-            <pre className="mt-2 p-2 bg-background/60 rounded text-[10px] text-text-muted font-mono overflow-x-auto max-h-24">
+            <pre className="mt-2 p-2 bg-surface-muted rounded text-[10px] text-text-muted font-mono overflow-x-auto max-h-24">
               {result.technicalDetails}
             </pre>
           )}

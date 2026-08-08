@@ -14,7 +14,7 @@ interface CodeEditorProps {
 // O destaque de sintaxe padrão do CodeMirror foi pensado para fundo claro e
 // fica com contraste ruim sobre o tema escuro do app (ex.: "print" saía num
 // vermelho apagado, quase ilegível). Cores próprias, todas com contraste
-// AA sobre o fundo #020617.
+// AA sobre o fundo do editor (#100B1B, token surface-muted).
 //
 // Paleta independente do Design System da marca (docs/design-system.md):
 // segue convenção própria de destaque de sintaxe de código (como um tema de
@@ -54,41 +54,52 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
         // CodeMirror exige valores literais aqui (não aceita classe Tailwind) —
         // os hex abaixo são exatamente os valores dos tokens do Design System
         // (docs/design-system.md). Se um token mudar de valor lá, atualizar aqui também.
+        // O editor é uma área recuada/secundária da interface (não o fundo
+        // principal da aplicação) — por isso usa `surface-muted`, não `background`.
         EditorView.theme({
           "&": {
             height: "100%",
-            backgroundColor: "#020617", // token background
-            color: "#cbd5e1", // token text-secondary
+            backgroundColor: "#100B1B", // token surface-muted
+            color: "#D7D0E3", // token text-secondary
             fontSize: "14px",
             fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
           },
+          // `brand-primary-hover` (#6D28D9) fica escuro demais para servir de
+          // indicador visível sobre o fundo recuado do editor (< 3:1) — usa-se
+          // `brand-secondary` aqui, mesma regra de fallback dos textos pequenos
+          // de marca (ver docs/design-system.md).
           ".cm-content": {
-            caretColor: "#818cf8", // token brand-primary-hover
+            caretColor: "#A78BFA", // token brand-secondary
           },
           // basicSetup usa drawSelection(), que desenha seu próprio cursor em
           // vez do caret nativo — por padrão com borda preta, invisível sobre
           // o fundo escuro. Precisa ser sobrescrito à parte do caretColor acima.
           ".cm-cursor, .cm-cursor-primary": {
-            borderLeftColor: "#818cf8", // token brand-primary-hover
+            borderLeftColor: "#A78BFA", // token brand-secondary
             borderLeftWidth: "2px",
           },
+          // Também via drawSelection(): destaque de seleção de texto, tingido
+          // com a cor de marca em baixa opacidade.
+          "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": {
+            backgroundColor: "rgba(124, 58, 237, 0.35)", // token brand-primary
+          },
           "&.cm-focused": {
-            outline: "2px solid #6366f1", // token focus / brand-primary
+            outline: "2px solid #A78BFA", // token focus
             outlineOffset: "-2px",
           },
           ".cm-gutters": {
-            backgroundColor: "#0f172a", // token surface
-            color: "#94a3b8", // token text-muted (contraste AA sobre a surface)
-            borderRight: "1px solid #1e293b", // token border-default
+            backgroundColor: "#151022", // token surface
+            color: "#9F95B0", // token text-muted (contraste AA sobre a surface)
+            borderRight: "1px solid #302541", // token border-default
           },
           // O overlay padrão de linha ativa é claro (pensado para tema claro)
           // e cria uma faixa acinzentada de baixo contraste sobre o fundo escuro.
           ".cm-activeLine": {
-            backgroundColor: "rgba(99, 102, 241, 0.08)", // token brand-primary, bem sutil
+            backgroundColor: "rgba(124, 58, 237, 0.08)", // token brand-primary, bem sutil
           },
           ".cm-activeLineGutter": {
-            backgroundColor: "rgba(99, 102, 241, 0.12)", // token brand-primary
-            color: "#cbd5e1", // token text-secondary
+            backgroundColor: "rgba(124, 58, 237, 0.12)", // token brand-primary
+            color: "#D7D0E3", // token text-secondary
           },
         }),
         Prec.highest(syntaxHighlighting(pythonHighlightStyle)),

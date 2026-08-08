@@ -18,10 +18,10 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "1. Leia a explicação",
     description: (
       <>
-        Antes de praticar, leia o <strong className="text-brand-primary-hover">Objetivo</strong>, o{" "}
-        <strong className="text-brand-primary-hover">Para que serve?</strong>, o{" "}
-        <strong className="text-brand-primary-hover">Como funciona?</strong> e o{" "}
-        <strong className="text-brand-primary-hover">Exemplo</strong>. Comece lendo a explicação da
+        Antes de praticar, leia o <strong className="text-brand-secondary">Objetivo</strong>, o{" "}
+        <strong className="text-brand-secondary">Para que serve?</strong>, o{" "}
+        <strong className="text-brand-secondary">Como funciona?</strong> e o{" "}
+        <strong className="text-brand-secondary">Exemplo</strong>. Comece lendo a explicação da
         unidade. Você não precisa decorar nada. O objetivo é entender a ideia principal antes de
         praticar.
       </>
@@ -40,8 +40,8 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "3. Use Executar",
     description: (
       <>
-        Clique em <strong className="text-brand-primary-hover">Executar</strong> para ver o que o seu
-        código produz. <strong className="text-brand-primary-hover">Executar</strong> não avalia se a
+        Clique em <strong className="text-brand-secondary">Executar</strong> para ver o que o seu
+        código produz. <strong className="text-brand-secondary">Executar</strong> não avalia se a
         resposta está correta; ele apenas roda o programa e mostra o resultado.
       </>
     ),
@@ -60,7 +60,7 @@ const GUIDE_STEPS: GuideStep[] = [
     description: (
       <>
         Quando acreditar que sua resposta está correta, clique em{" "}
-        <strong className="text-brand-primary-hover">Verificar</strong>. O ITERA comparará o resultado
+        <strong className="text-brand-secondary">Verificar</strong>. O ITERA comparará o resultado
         com o objetivo da atividade e mostrará um feedback.
       </>
     ),
@@ -70,7 +70,7 @@ const GUIDE_STEPS: GuideStep[] = [
     description: (
       <>
         <p className="mb-2">
-          Depois de <strong className="text-brand-primary-hover">Verificar</strong>, você pode ver:
+          Depois de <strong className="text-brand-secondary">Verificar</strong>, você pode ver:
         </p>
         <ul className="list-disc pl-4 space-y-1">
           <li>Sucesso</li>
@@ -86,7 +86,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "7. Use as dicas",
     description: (
       <>
-        Se ficar em dúvida, use o botão <strong className="text-brand-primary-hover">Dica</strong>. As
+        Se ficar em dúvida, use o botão <strong className="text-brand-secondary">Dica</strong>. As
         dicas são liberadas uma por vez para ajudar sem entregar imediatamente a resposta.
       </>
     ),
@@ -95,7 +95,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "8. Restaurar código",
     description: (
       <>
-        Use <strong className="text-brand-primary-hover">Restaurar</strong> quando quiser voltar ao
+        Use <strong className="text-brand-secondary">Restaurar</strong> quando quiser voltar ao
         código inicial da atividade. Essa ação substitui o que está atualmente no editor.
       </>
     ),
@@ -104,7 +104,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "9. Reiniciar progresso",
     description: (
       <>
-        Use <strong className="text-brand-primary-hover">Reiniciar progresso</strong> somente quando
+        Use <strong className="text-brand-secondary">Reiniciar progresso</strong> somente quando
         quiser começar novamente do zero. Essa ação apaga o progresso da unidade, tentativas,
         dicas abertas e código salvo.
       </>
@@ -199,8 +199,8 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         ref={containerRef}
         className="bg-surface border border-border-default rounded-lg shadow-modal w-full max-w-2xl max-h-[85vh] flex flex-col"
       >
-        <div className="p-4 border-b border-border-default flex items-center justify-between bg-background/40">
-          <h2 id="guide-title" className="font-bold text-text-primary flex items-center space-x-2">
+        <div className="p-4 border-b border-border-default flex items-center justify-between bg-surface-muted">
+          <h2 id="guide-title" className="font-bold text-brand-secondary flex items-center space-x-2">
             <span className="text-brand-primary">📘</span>
             <span>Como usar o ITERA</span>
           </h2>

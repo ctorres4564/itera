@@ -8,7 +8,7 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ header, sidebar, children }) => {
   return (
-    <div className="min-h-screen bg-surface text-text-primary flex flex-col font-sans">
+    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans">
       {/* Header */}
       <header className="border-b border-border-default bg-background/80 backdrop-blur sticky top-0 z-50">
         {header}

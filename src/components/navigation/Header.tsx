@@ -68,7 +68,9 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
         {/* Botão do guia de orientação */}
         <button
           onClick={() => setShowGuide(true)}
-          className="px-3 py-1.5 text-xs font-medium text-brand-primary hover:text-brand-primary-hover bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-focus"
+          // text-brand-secondary (não brand-primary) para manter AA sobre o
+          // próprio fundo tingido em ambos os estados — ver docs/design-system.md
+          className="px-3 py-1.5 text-xs font-medium text-brand-secondary bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-focus"
         >
           Como usar
         </button>
