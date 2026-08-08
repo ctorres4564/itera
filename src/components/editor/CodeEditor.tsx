@@ -55,7 +55,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
             fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
           },
           ".cm-content": {
-            caretColor: "#6366f1", // indigo-500
+            caretColor: "#818cf8", // indigo-400
+          },
+          // basicSetup usa drawSelection(), que desenha seu próprio cursor em
+          // vez do caret nativo — por padrão com borda preta, invisível sobre
+          // o fundo escuro. Precisa ser sobrescrito à parte do caretColor acima.
+          ".cm-cursor, .cm-cursor-primary": {
+            borderLeftColor: "#818cf8", // indigo-400
+            borderLeftWidth: "2px",
           },
           "&.cm-focused": {
             outline: "2px solid #6366f1", // Foco visível nítido
