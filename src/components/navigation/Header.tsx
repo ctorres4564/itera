@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { GuideModal } from "../guide/GuideModal";
 
 interface HeaderProps {
   courseTitle: string;
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, onReset }) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const resetButtonRef = useRef<HTMLButtonElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -62,6 +64,14 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
           <span className="text-xs font-bold text-slate-300">{progressPercent}%</span>
         </div>
 
+        {/* Botão do guia de orientação */}
+        <button
+          onClick={() => setShowGuide(true)}
+          className="px-3 py-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-900/40 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          Como usar
+        </button>
+
         {/* Botão de Reiniciar Progresso */}
         <button
           ref={resetButtonRef}
@@ -99,6 +109,8 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
           </div>
         </div>
       )}
+
+      {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
     </div>
   );
 };
