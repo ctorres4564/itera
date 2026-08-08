@@ -9,7 +9,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentUnitId }) => {
     <nav className="p-4 md:p-6" aria-label="Navegação do curso">
       <div className="space-y-4">
         <div>
-          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          <h2 className="heading-2 mb-2">
             Trilha 1 — Fundamentos de interação
           </h2>
           <ul className="space-y-1">
@@ -17,12 +17,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentUnitId }) => {
               <span
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded transition-colors ${
                   currentUnitId === "1.1-print"
-                    ? "bg-slate-800 text-indigo-400 font-semibold"
-                    : "text-slate-400"
+                    ? "bg-surface-elevated text-brand-primary font-semibold"
+                    : "text-text-muted"
                 }`}
                 aria-current={currentUnitId === "1.1-print" ? "page" : undefined}
               >
-                <span className="w-2 h-2 rounded-full bg-indigo-500 mr-2" aria-hidden="true" />
+                <span className="w-2 h-2 rounded-full bg-brand-primary mr-2" aria-hidden="true" />
                 1.1 — print()
               </span>
             </li>

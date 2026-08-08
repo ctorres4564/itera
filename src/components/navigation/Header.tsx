@@ -47,28 +47,28 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
   return (
     <div className="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
       <div className="flex items-center space-x-4">
-        <h1 className="text-xl font-bold tracking-wider text-indigo-400">ITERA</h1>
-        <span className="text-slate-500 hidden sm:inline">|</span>
-        <span className="text-sm font-medium text-slate-300 hidden sm:inline">{courseTitle}</span>
+        <h1 className="text-xl font-bold tracking-wider text-brand-primary">ITERA</h1>
+        <span className="text-text-muted hidden sm:inline">|</span>
+        <span className="text-sm font-medium text-text-secondary hidden sm:inline">{courseTitle}</span>
       </div>
 
       <div className="flex items-center space-x-6">
         {/* Barra de Progresso */}
         <div className="flex items-center space-x-2">
-          <span className="text-xs font-semibold text-slate-400">Progresso:</span>
-          <div className="w-24 md:w-32 bg-slate-800 rounded-full h-2 overflow-hidden" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
+          <span className="text-label">Progresso:</span>
+          <div className="w-24 md:w-32 bg-surface-elevated rounded-full h-2 overflow-hidden" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
             <div
-              className="bg-indigo-500 h-2 rounded-full transition-all duration-500 ease-out"
+              className="bg-brand-primary h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <span className="text-xs font-bold text-slate-300">{progressPercent}%</span>
+          <span className="text-xs font-bold text-text-secondary">{progressPercent}%</span>
         </div>
 
         {/* Botão do guia de orientação */}
         <button
           onClick={() => setShowGuide(true)}
-          className="px-3 py-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-900/40 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="px-3 py-1.5 text-xs font-medium text-brand-primary hover:text-brand-primary-hover bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-focus"
         >
           Como usar
         </button>
@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
         <button
           ref={resetButtonRef}
           onClick={handleResetClick}
-          className="px-3 py-1.5 text-xs font-medium text-red-400 hover:text-red-300 bg-red-950/20 hover:bg-red-950/40 border border-red-900/50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
+          className="px-3 py-1.5 text-xs font-medium text-error hover:text-error bg-error/10 hover:bg-error/20 border border-error/30 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-error/50"
           aria-label="Reiniciar progresso do curso"
         >
           Reiniciar
@@ -88,23 +88,26 @@ export const Header: React.FC<HeaderProps> = ({ courseTitle, progressPercent, on
           o backdrop-blur do cabeçalho quebraria o posicionamento fixed). */}
       {showConfirm &&
         createPortal(
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 max-w-md w-full shadow-xl">
-              <h2 id="modal-title" className="text-lg font-bold text-slate-100 mb-2">Reiniciar Progresso?</h2>
-              <p className="text-sm text-slate-400 mb-6">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div className="bg-surface border border-border-default rounded-lg p-6 max-w-md w-full shadow-modal">
+              <h2 id="modal-title" className="text-lg font-bold text-text-primary mb-2">Reiniciar Progresso?</h2>
+              <p className="text-body mb-6">
                 Esta ação apagará todo o seu progresso nesta unidade e restaurará o código inicial. Essa ação não pode ser desfeita.
               </p>
               <div className="flex justify-end space-x-3">
                 <button
                   ref={cancelButtonRef}
                   onClick={handleCancelReset}
-                  className="px-4 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500"
+                  className="px-4 py-2 text-xs font-medium text-text-secondary bg-surface-elevated hover:bg-border-strong rounded transition-colors focus:ring-2 focus:ring-focus"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleConfirmReset}
-                  className="px-4 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-500 rounded transition-colors focus:ring-2 focus:ring-red-500"
+                  // danger-solid/danger-solid-hover: preenchimento sólido de ação destrutiva.
+                  // `error`/`error-surface` são para texto e superfície de mensagem (tons claros),
+                  // não para botão sólido — por isso o token dedicado.
+                  className="px-4 py-2 text-xs font-medium text-text-inverse bg-danger-solid hover:bg-danger-solid-hover rounded transition-colors focus:ring-2 focus:ring-error"
                 >
                   Confirmar e Reiniciar
                 </button>

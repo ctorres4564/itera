@@ -8,15 +8,15 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ header, sidebar, children }) => {
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-surface text-text-primary flex flex-col font-sans">
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+      <header className="border-b border-border-default bg-background/80 backdrop-blur sticky top-0 z-50">
         {header}
       </header>
 
       <div className="flex flex-1 flex-col md:flex-row">
         {/* Navigation Sidebar */}
-        <aside className="w-full md:w-64 border-r border-slate-800 bg-slate-950/40 flex-shrink-0">
+        <aside className="w-full md:w-64 border-r border-border-default bg-background/40 flex-shrink-0">
           {sidebar}
         </aside>
 

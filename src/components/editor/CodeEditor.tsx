@@ -15,6 +15,11 @@ interface CodeEditorProps {
 // fica com contraste ruim sobre o tema escuro do app (ex.: "print" saía num
 // vermelho apagado, quase ilegível). Cores próprias, todas com contraste
 // AA sobre o fundo #020617.
+//
+// Paleta independente do Design System da marca (docs/design-system.md):
+// segue convenção própria de destaque de sintaxe de código (como um tema de
+// editor), não os tokens de marca — nenhuma dessas cores deve ser lida como
+// dependente de `accent`/`brand-*`, mesmo que algum valor coincida.
 const pythonHighlightStyle = HighlightStyle.define([
   { tag: [tags.keyword, tags.controlKeyword, tags.operatorKeyword, tags.self], color: "#a5b4fc" }, // indigo-300
   { tag: [tags.string, tags.special(tags.string)], color: "#86efac" }, // green-300
@@ -46,41 +51,44 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
         basicSetup, // Inclui numeração de linhas, indentação, undo/redo, seleção múltipla e atalhos básicos
         python(),   // Destacamento de sintaxe Python
         EditorView.lineWrapping, // Quebra automática de linhas
+        // CodeMirror exige valores literais aqui (não aceita classe Tailwind) —
+        // os hex abaixo são exatamente os valores dos tokens do Design System
+        // (docs/design-system.md). Se um token mudar de valor lá, atualizar aqui também.
         EditorView.theme({
           "&": {
             height: "100%",
-            backgroundColor: "#020617", // slate-950
-            color: "#cbd5e1", // slate-300
+            backgroundColor: "#020617", // token background
+            color: "#cbd5e1", // token text-secondary
             fontSize: "14px",
             fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
           },
           ".cm-content": {
-            caretColor: "#818cf8", // indigo-400
+            caretColor: "#818cf8", // token brand-primary-hover
           },
           // basicSetup usa drawSelection(), que desenha seu próprio cursor em
           // vez do caret nativo — por padrão com borda preta, invisível sobre
           // o fundo escuro. Precisa ser sobrescrito à parte do caretColor acima.
           ".cm-cursor, .cm-cursor-primary": {
-            borderLeftColor: "#818cf8", // indigo-400
+            borderLeftColor: "#818cf8", // token brand-primary-hover
             borderLeftWidth: "2px",
           },
           "&.cm-focused": {
-            outline: "2px solid #6366f1", // Foco visível nítido
+            outline: "2px solid #6366f1", // token focus / brand-primary
             outlineOffset: "-2px",
           },
           ".cm-gutters": {
-            backgroundColor: "#0f172a", // slate-900
-            color: "#94a3b8", // slate-400 (contraste AA sobre slate-900)
-            borderRight: "1px solid #1e293b", // slate-800
+            backgroundColor: "#0f172a", // token surface
+            color: "#94a3b8", // token text-muted (contraste AA sobre a surface)
+            borderRight: "1px solid #1e293b", // token border-default
           },
           // O overlay padrão de linha ativa é claro (pensado para tema claro)
           // e cria uma faixa acinzentada de baixo contraste sobre o fundo escuro.
           ".cm-activeLine": {
-            backgroundColor: "rgba(99, 102, 241, 0.08)", // indigo-500 bem sutil
+            backgroundColor: "rgba(99, 102, 241, 0.08)", // token brand-primary, bem sutil
           },
           ".cm-activeLineGutter": {
-            backgroundColor: "rgba(99, 102, 241, 0.12)",
-            color: "#cbd5e1", // slate-300
+            backgroundColor: "rgba(99, 102, 241, 0.12)", // token brand-primary
+            color: "#cbd5e1", // token text-secondary
           },
         }),
         Prec.highest(syntaxHighlighting(pythonHighlightStyle)),
@@ -137,7 +145,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
   return (
     <div
       ref={containerRef}
-      className="w-full h-48 border border-slate-800 rounded overflow-hidden"
+      className="w-full h-48 border border-border-default rounded overflow-hidden"
       role="textbox"
       aria-label="Editor de código"
     />

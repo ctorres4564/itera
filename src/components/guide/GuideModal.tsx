@@ -18,10 +18,10 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "1. Leia a explicação",
     description: (
       <>
-        Antes de praticar, leia o <strong className="text-indigo-300">Objetivo</strong>, o{" "}
-        <strong className="text-indigo-300">Para que serve?</strong>, o{" "}
-        <strong className="text-indigo-300">Como funciona?</strong> e o{" "}
-        <strong className="text-indigo-300">Exemplo</strong>. Comece lendo a explicação da
+        Antes de praticar, leia o <strong className="text-brand-primary-hover">Objetivo</strong>, o{" "}
+        <strong className="text-brand-primary-hover">Para que serve?</strong>, o{" "}
+        <strong className="text-brand-primary-hover">Como funciona?</strong> e o{" "}
+        <strong className="text-brand-primary-hover">Exemplo</strong>. Comece lendo a explicação da
         unidade. Você não precisa decorar nada. O objetivo é entender a ideia principal antes de
         praticar.
       </>
@@ -40,8 +40,8 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "3. Use Executar",
     description: (
       <>
-        Clique em <strong className="text-indigo-300">Executar</strong> para ver o que o seu
-        código produz. <strong className="text-indigo-300">Executar</strong> não avalia se a
+        Clique em <strong className="text-brand-primary-hover">Executar</strong> para ver o que o seu
+        código produz. <strong className="text-brand-primary-hover">Executar</strong> não avalia se a
         resposta está correta; ele apenas roda o programa e mostra o resultado.
       </>
     ),
@@ -60,7 +60,7 @@ const GUIDE_STEPS: GuideStep[] = [
     description: (
       <>
         Quando acreditar que sua resposta está correta, clique em{" "}
-        <strong className="text-indigo-300">Verificar</strong>. O ITERA comparará o resultado
+        <strong className="text-brand-primary-hover">Verificar</strong>. O ITERA comparará o resultado
         com o objetivo da atividade e mostrará um feedback.
       </>
     ),
@@ -70,7 +70,7 @@ const GUIDE_STEPS: GuideStep[] = [
     description: (
       <>
         <p className="mb-2">
-          Depois de <strong className="text-indigo-300">Verificar</strong>, você pode ver:
+          Depois de <strong className="text-brand-primary-hover">Verificar</strong>, você pode ver:
         </p>
         <ul className="list-disc pl-4 space-y-1">
           <li>Sucesso</li>
@@ -86,7 +86,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "7. Use as dicas",
     description: (
       <>
-        Se ficar em dúvida, use o botão <strong className="text-indigo-300">Dica</strong>. As
+        Se ficar em dúvida, use o botão <strong className="text-brand-primary-hover">Dica</strong>. As
         dicas são liberadas uma por vez para ajudar sem entregar imediatamente a resposta.
       </>
     ),
@@ -95,7 +95,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "8. Restaurar código",
     description: (
       <>
-        Use <strong className="text-indigo-300">Restaurar</strong> quando quiser voltar ao
+        Use <strong className="text-brand-primary-hover">Restaurar</strong> quando quiser voltar ao
         código inicial da atividade. Essa ação substitui o que está atualmente no editor.
       </>
     ),
@@ -104,7 +104,7 @@ const GUIDE_STEPS: GuideStep[] = [
     title: "9. Reiniciar progresso",
     description: (
       <>
-        Use <strong className="text-indigo-300">Reiniciar progresso</strong> somente quando
+        Use <strong className="text-brand-primary-hover">Reiniciar progresso</strong> somente quando
         quiser começar novamente do zero. Essa ação apaga o progresso da unidade, tentativas,
         dicas abertas e código salvo.
       </>
@@ -190,24 +190,24 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
   // do cabeçalho em vez de cobrir a viewport inteira.
   return createPortal(
     <div
-      className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       role="dialog"
       aria-modal="true"
       aria-labelledby="guide-title"
     >
       <div
         ref={containerRef}
-        className="bg-slate-900 border border-slate-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[85vh] flex flex-col"
+        className="bg-surface border border-border-default rounded-lg shadow-modal w-full max-w-2xl max-h-[85vh] flex flex-col"
       >
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
-          <h2 id="guide-title" className="font-bold text-slate-100 flex items-center space-x-2">
-            <span className="text-indigo-400">📘</span>
+        <div className="p-4 border-b border-border-default flex items-center justify-between bg-background/40">
+          <h2 id="guide-title" className="font-bold text-text-primary flex items-center space-x-2">
+            <span className="text-brand-primary">📘</span>
             <span>Como usar o ITERA</span>
           </h2>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="p-1 text-slate-400 hover:text-slate-200 rounded focus:ring-2 focus:ring-slate-500"
+            className="p-1 text-text-muted hover:text-text-secondary rounded focus:ring-2 focus:ring-focus"
             aria-label="Fechar guia de orientação"
           >
             ✕
@@ -217,10 +217,10 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {GUIDE_STEPS.map((step) => (
             <div key={step.title}>
-              <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider mb-1">
+              <h3 className="heading-2 mb-1">
                 {step.title}
               </h3>
-              <div className="text-sm text-slate-300 leading-relaxed">{step.description}</div>
+              <div className="text-sm text-text-secondary leading-relaxed">{step.description}</div>
             </div>
           ))}
         </div>

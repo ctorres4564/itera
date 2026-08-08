@@ -199,35 +199,35 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
         {/* Lado Esquerdo: Conteúdo Pedagógico */}
         <section className="lg:col-span-6 space-y-6" aria-labelledby="unit-title">
           <div>
-            <h2 id="unit-title" className="text-2xl font-bold text-slate-100 mb-2">{unit.title}</h2>
+            <h2 id="unit-title" className="heading-1 mb-2">{unit.title}</h2>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-semibold px-2.5 py-0.5 bg-indigo-950 text-indigo-400 border border-indigo-900 rounded-full">
+              <span className="text-xs font-semibold px-2.5 py-0.5 bg-brand-primary/10 text-brand-primary border border-brand-primary/30 rounded-full">
                 Unidade {unit.order}
               </span>
               {unitProgress.completed && (
-                <span className="text-xs font-semibold px-2.5 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-900 rounded-full">
+                <span className="text-xs font-semibold px-2.5 py-0.5 bg-success-surface text-success border border-success-surface rounded-full">
                   Concluído
                 </span>
               )}
             </div>
           </div>
 
-          <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
+          <div className="space-y-4 text-body">
             <div>
-              <h3 className="font-bold text-slate-200 mb-1 text-xs uppercase tracking-wider">Objetivo</h3>
+              <h3 className="heading-2 mb-1">Objetivo</h3>
               <p>{unit.objectives[0]}</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-200 mb-1 text-xs uppercase tracking-wider">Para que serve?</h3>
+              <h3 className="heading-2 mb-1">Para que serve?</h3>
               <p>{unit.essential.purpose}</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-200 mb-1 text-xs uppercase tracking-wider">Como funciona?</h3>
+              <h3 className="heading-2 mb-1">Como funciona?</h3>
               <p>{unit.essential.behavior}</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-200 mb-1 text-xs uppercase tracking-wider">Exemplo</h3>
-              <pre className="p-3 bg-slate-950 border border-slate-800 rounded font-mono text-indigo-300 text-xs">
+              <h3 className="heading-2 mb-1">Exemplo</h3>
+              <pre className="p-3 bg-background border border-border-default rounded font-mono text-brand-primary-hover text-xs">
                 {unit.essential.example}
               </pre>
             </div>
@@ -236,7 +236,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
 
         {/* Lado Direito: Área de Prática */}
         <section className="lg:col-span-6 space-y-6" aria-label="Área de Prática">
-          <div className="bg-slate-950 border border-slate-800 rounded-lg overflow-hidden flex flex-col">
+          <div className="bg-background border border-border-default rounded-lg overflow-hidden flex flex-col">
             <EditorToolbar />
 
             {/* Editor CodeMirror 6 Controlado */}
@@ -246,12 +246,12 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
             />
 
             {/* Ações */}
-            <div className="bg-slate-900 px-4 py-3 border-t border-slate-800 flex items-center justify-between">
+            <div className="bg-surface px-4 py-3 border-t border-border-default flex items-center justify-between">
               <div className="flex space-x-2">
                 <button
                   onClick={handleExecute}
                   disabled={engineStatus !== "ready" || isRunning}
-                  className="px-4 py-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded transition-colors focus:ring-2 focus:ring-slate-500 disabled:opacity-40 disabled:hover:bg-slate-800"
+                  className="px-4 py-2 text-xs font-bold text-text-secondary bg-surface-elevated hover:bg-border-strong rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-surface-elevated"
                 >
                   {engineStatus === "loading" && "Carregando motor Python…"}
                   {engineStatus === "error" && "Motor indisponível"}
@@ -260,7 +260,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
                 <button
                   onClick={handleVerify}
                   disabled={!feedback}
-                  className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded transition-colors focus:ring-2 focus:ring-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600"
+                  className="px-4 py-2 text-xs font-bold text-text-inverse bg-brand-primary hover:bg-brand-primary-hover rounded transition-colors focus:ring-2 focus:ring-focus disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-brand-primary"
                 >
                   Verificar
                 </button>
@@ -270,13 +270,13 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
                 <button
                   onClick={handleUnlockHint}
                   disabled={unitProgress.unlockedHintsCount >= unit.hints.length}
-                  className="px-3 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 disabled:opacity-40 disabled:hover:text-slate-400 transition-colors"
+                  className="px-3 py-2 text-xs font-semibold text-text-muted hover:text-text-secondary disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-text-muted transition-colors"
                 >
                   Dica ({unitProgress.unlockedHintsCount}/{unit.hints.length})
                 </button>
                 <button
                   onClick={handleResetProgress}
-                  className="px-3 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors"
+                  className="px-3 py-2 text-xs font-semibold text-text-muted hover:text-text-secondary transition-colors"
                 >
                   Restaurar
                 </button>
@@ -286,11 +286,11 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
 
           {/* Dicas reveladas */}
           {unitProgress.unlockedHintsCount > 0 && (
-            <div className="bg-slate-950/40 border border-slate-800/80 rounded-lg p-4 space-y-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Dicas Liberadas:</h4>
+            <div className="bg-surface-muted border border-border-default rounded-lg p-4 space-y-2">
+              <h4 className="text-label uppercase tracking-wider">Dicas Liberadas:</h4>
               <ol className="list-decimal pl-4 space-y-1.5">
                 {unit.hints.slice(0, unitProgress.unlockedHintsCount).map((hint, idx) => (
-                  <li key={idx} className="text-xs text-slate-300 leading-relaxed">
+                  <li key={idx} className="text-xs text-text-secondary leading-relaxed">
                     {hint}
                   </li>
                 ))}
@@ -299,10 +299,10 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
           )}
 
           {/* Painel de Saída */}
-          <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-2">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Painel de Saída:</h4>
+          <div className="bg-background border border-border-default rounded-lg p-4 space-y-2">
+            <h4 className="text-label uppercase tracking-wider">Painel de Saída:</h4>
             <pre
-              className="font-mono text-xs text-slate-300 min-h-12 bg-slate-900/60 p-3 rounded overflow-x-auto whitespace-pre-wrap"
+              className="font-mono text-xs text-text-secondary min-h-12 bg-surface-muted p-3 rounded overflow-x-auto whitespace-pre-wrap"
               aria-live="polite"
             >
               {stdout || "(Aguardando execução...)"}
@@ -318,7 +318,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ repository }) => {
       <div className="pt-6">
         <button
           onClick={handleOpenDeepDive}
-          className="px-4 py-2 text-xs font-medium text-indigo-400 hover:text-indigo-300 bg-indigo-950/20 hover:bg-indigo-950/40 border border-indigo-900/40 rounded transition-colors focus:ring-2 focus:ring-indigo-500"
+          className="px-4 py-2 text-xs font-medium text-brand-primary hover:text-brand-primary-hover bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded transition-colors focus:ring-2 focus:ring-focus"
         >
           💡 Quero me aprofundar (Opcional)
         </button>

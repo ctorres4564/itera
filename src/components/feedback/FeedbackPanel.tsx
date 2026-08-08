@@ -29,10 +29,12 @@ const TONE_BY_STATUS: Record<ActivityResult["status"], Tone> = {
   internal_error: "error",
 };
 
+// bg/border reaproveitam o mesmo token *-surface (já translúcido) para criar
+// um painel tingido coeso, em vez de precisar de um token de borda à parte.
 const STYLE_BY_TONE: Record<Tone, { bg: string; text: string; icon: string }> = {
-  success: { bg: "bg-emerald-950/30 border-emerald-900/50", text: "text-emerald-300", icon: "✓" },
-  warning: { bg: "bg-amber-950/20 border-amber-900/50", text: "text-amber-300", icon: "◐" },
-  error: { bg: "bg-red-950/20 border-red-900/50", text: "text-red-300", icon: "⚠" },
+  success: { bg: "bg-success-surface border-success-surface", text: "text-success", icon: "✓" },
+  warning: { bg: "bg-warning-surface border-warning-surface", text: "text-warning", icon: "◐" },
+  error: { bg: "bg-error-surface border-error-surface", text: "text-error", icon: "⚠" },
 };
 
 export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({ result }) => {
@@ -51,9 +53,9 @@ export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({ result }) => {
         </span>
         <div className="flex-1">
           <h4 className={`text-sm font-bold ${textClass} mb-1`}>{titleText}</h4>
-          <p className="text-xs text-slate-300 leading-relaxed">{result.message}</p>
+          <p className="text-xs text-text-secondary leading-relaxed">{result.message}</p>
           {result.technicalDetails && (
-            <pre className="mt-2 p-2 bg-slate-950/60 rounded text-[10px] text-slate-400 font-mono overflow-x-auto max-h-24">
+            <pre className="mt-2 p-2 bg-background/60 rounded text-[10px] text-text-muted font-mono overflow-x-auto max-h-24">
               {result.technicalDetails}
             </pre>
           )}
