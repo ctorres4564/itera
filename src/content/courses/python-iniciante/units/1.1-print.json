@@ -8,10 +8,10 @@
     "Exibir a mensagem \"Meu diário de saúde\" no painel de saída"
   ],
   "essential": {
-    "purpose": "Programas de computador frequentemente precisam exibir informações para quem os utiliza, seja um texto na tela, um relatório ou um aviso de progresso.",
+    "purpose": "Programas de computador frequentemente precisam exibir informações para quem os utiliza — um aviso, um título, uma mensagem de status ou qualquer informação relevante para o usuário.",
     "behavior": "No Python, a ferramenta padrão para exibir mensagens na tela é a função `print()`. Para usá-la, escrevemos o nome da função em letras minúsculas, abrimos parênteses, colocamos o texto que queremos exibir entre aspas (duplas ou simples) e fechamos parênteses.",
     "example": "print(\"Olá\")",
-    "application": "print(\"Meu diário de saúde\")"
+    "application": "print(\"Consulta iniciada\")"
   },
   "deepDive": {
     "enabled": true,
